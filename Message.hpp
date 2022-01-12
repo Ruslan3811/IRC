@@ -8,6 +8,7 @@ class Message
 private:
     std::string _cmd;
     std::vector<std::string> _parameters;
+    std::string _trailing;
 public:
     Message();
     ~Message();
@@ -18,5 +19,5 @@ public:
     std::string getCmd(void) const;
     void setCmd(std::string cmd);
 
-
+    std::string getTrailing(void); 
 };

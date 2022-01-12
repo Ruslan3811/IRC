@@ -23,3 +23,8 @@ void Message::setCmd(std::string cmd)
 {
     _cmd = cmd;
 }
+
+std::string Message::getTrailing()
+{
+    return _trailing;
+}

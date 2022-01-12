@@ -25,6 +25,8 @@ private:
 	sockaddr_in			_sockaddr;
 	std::vector<pollfd>	_fdUsers;
 	std::vector<User *>	_UsersAccept;
+	std::string			_servername;
+	std::string 		_hostname;
 
 	Server();
 	Server(const Server& copy);
@@ -40,7 +42,9 @@ public:
 
 	int getPort() const { return _port; }
 	const std::string& getPassword() const { return _password; }
-	int passCmd(Message &msg, User &user);
+
+	int cmdPass(Message &msg, User &user);
+	int cmdUser(Message &msg, User &user);
 };
 
 void exita(std::string msg);

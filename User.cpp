@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-User::User(int socket, std::string host, std::string name): _socket(socket), _host(host), _name(name){}
+User::User(int socket, std::string host): _socket(socket), _host(host){}
 
 User::User(void): _flag(0){}
 
@@ -16,11 +16,9 @@ int User::getFlag()const
     return _flag;
 }
 
-int User::IsTrueLenPassword(std::string password)
+int User::IsTrueLength(std::string str)
 {
-    if (!password.length())
-        return false;
-    return true;
+    return str.length();
 }
 
 bool User::isAlreadyRegistered(void)const

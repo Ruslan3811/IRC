@@ -1,11 +1,15 @@
 #include "Server.hpp"
 
+
+
 void exita(std::string msg) {
 	std::cerr << msg << std::endl;
 	exit(1);
 }
 
-Server::Server(int port, const std::string &password) : _port(port), _password(password) {}
+Server::Server(int port, const std::string &password) : _port(port), _password(password) {
+	_servername = "IRC";
+}
 
 Server::~Server() {}
 
@@ -52,7 +56,7 @@ void Server::acceptUsers() {
 		pfd.events = POLLIN;
 		pfd.revents = POLLERR;
 		_fdUsers.push_back(pfd);
-		_UsersAccept.push_back(new User(clientSocket, host, ))
+		_UsersAccept.push_back(new User(clientSocket, host));
 		// std::vector<pollfd>::iterator it = _fdUsers.begin();
 		// std::vector<pollfd>::iterator it2 = _fdUsers.end();
 		// for(; it != it2; ++it) {

@@ -14,4 +14,4 @@ enum ERRORS
     ERR_ALREADYREGISTRED = 462,
 };
 
-int sendErr(const Message &msg, const User &user);
+int sendErr(const Message &msg, const User &user, int err);

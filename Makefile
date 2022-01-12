@@ -1,6 +1,6 @@
 NAME = ircserv
 
-SOURCE = main.cpp Server.cpp
+SOURCE = main.cpp Server.cpp Cmd.cpp Errors.cpp User.cpp Message.cpp
 
 OBJ_DIR = .obj
 

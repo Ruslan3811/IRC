@@ -1,13 +1,13 @@
 #include "Errors.hpp"
 #include "sys/socket.h"
 
-int sendErr(const Message &msg, const User &user)
+int sendErr(const Message &msg, const User &user, int err)
 {
     std::string error;
 
-    if (user.getFlag() == ERR_NEEDMOREPARAMS)
+    if (err == ERR_NEEDMOREPARAMS)
         error = "You may not reregister\n";
-    else if (user.getFlag() == ERR_ALREADYREGISTRED)
+    else if (err == ERR_ALREADYREGISTRED)
         error = msg.getCmd() + " Not enough parameters\n";
     // std::cout << error;
     send(user.getSocket(), error.c_str(), error.length(), 16384); 
