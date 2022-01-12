@@ -29,4 +29,6 @@ public:
     void setSocket(int sock);
 
     int getFlag()const;
+    void setUserName(std::string username);
+    void setUserRealName(std::string realname);
 };

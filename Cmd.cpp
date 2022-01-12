@@ -8,20 +8,21 @@ int Server::cmdPass(Message &msg, User &user)
 		sendErr(msg, user, ERR_NEEDMOREPARAMS);
 	else if (user.isAlreadyRegistered())
 		sendErr(msg, user, ERR_ALREADYREGISTRED);
-	else
-		user.setPassword(password);
+	user.setPassword(password);
 	return (0);
 }
 
 int Server::cmdUser(Message &msg, User &user)
 {
-	std::string username = msg.getParams().front();
-	std::string trailing = msg.getTrailing();
-	if ((!user.IsTrueLength(username) && msg.getParams().size() != 3) || user.IsTrueLength(trailing) == 1)
+	std::string realname = msg.getTrailing();
+
+	if (msg.getParams().size() != 3 || realname.length() == 1)
 		sendErr(msg, user, ERR_NEEDMOREPARAMS);
 	else if (user.isAlreadyRegistered())
 		sendErr(msg, user, ERR_ALREADYREGISTRED);
-	// else
-	// 	user.setUserName();
+	user.setUserName(msg.getParams()[0]);
+	user.setUserRealName(msg.getTrailing().erase(0, 1));
+	this->setHostName(msg.getParams()[1]);
+	this->setServerName(msg.getParams()[2]);
 	return (0);
 }

@@ -6,6 +6,16 @@ User::User(void): _flag(0){}
 
 User::~User(void){}
 
+void User::setUserRealName(std::string realname)
+{
+    _realname = realname;
+}
+
+void User::setUserName(std::string username)
+{
+    _username = username;
+}
+
 void User::setSocket(int sock)
 {
     _socket = sock;
