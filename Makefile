@@ -4,7 +4,7 @@ SOURCE = main.cpp Server.cpp Cmd.cpp Errors.cpp User.cpp Message.cpp
 
 OBJ_DIR = .obj
 
-HDR = Server.hpp
+HDR = Server.hpp Errors.hpp User.hpp Message.hpp
 
 FLAGS = -Wall -Wextra -Werror --std=c++98
 
