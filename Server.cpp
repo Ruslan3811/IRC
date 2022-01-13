@@ -62,6 +62,5 @@ void Server::acceptUsers() {
 		// for(; it != it2; ++it) {
 		// 	std::cout << "---" << it->fd << it->events << it->revents << std::endl;
 		// }
-	}
-
+	} 
 }
