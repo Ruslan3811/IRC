@@ -6,6 +6,7 @@
 #include <poll.h>
 #include <string>
 #include <netinet/in.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -27,6 +28,7 @@ private:
 	std::vector<User *>	_UsersAccept;
 	std::string			_servername;
 	std::string 		_hostname;
+	int					_clientSocket;
 
 	Server();
 	Server(const Server& copy);
@@ -39,9 +41,11 @@ public:
 	void bindSocket();
 	void listenSocket();
 	void acceptUsers();
+	void receivingMessages();
 
 	int getPort() const { return _port; }
 	const std::string& getPassword() const { return _password; }
+	int getClientSocket() const { return _clientSocket; }
 
 	int cmdPass(Message &msg, User &user);
 	int cmdUser(Message &msg, User &user);

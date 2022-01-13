@@ -23,8 +23,7 @@ int main(int ac, char **av) {
 			// Accept a call
 			serv.acceptUsers();
 			// While receiving - display message, echo message
-			// Close socket
-
+			serv.receivingMessages();
 		}
 	}
 }
