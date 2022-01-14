@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <poll.h>
 #include <string>
+#include <cstring>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
@@ -16,6 +17,7 @@
 #include <fstream>
 #include <map>
 
+class User;
 #include "User.hpp"
 
 class Server {

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Errors.hpp"
 #include "Message.hpp"
+#include "Server.hpp"
 
 class User
 {
@@ -29,4 +30,7 @@ public:
     void setSocket(int sock);
 
     int getFlag()const;
+
+    // Alena
+    int readMsg();
 };

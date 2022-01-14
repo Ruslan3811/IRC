@@ -70,9 +70,10 @@ void Server::receivingMessages() {
 				// читаем сообщение
 				int idx = it - _fdUsers.begin();
 				idx += 0;
-				// _UsersAccept[idx].readMessage()
+				if (_UsersAccept[idx]->readMsg() == -1)
+					_UsersAccept[idx]->setFlag(-1);
 			}
-			it->revents = 0; // обнуляем revents, чтобы можно было преиспользовать структуру
+			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
 	}
 }

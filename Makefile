@@ -13,11 +13,11 @@ OBJ = $(addprefix $(OBJ_DIR)/,$(SOURCE:.cpp=.o))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@clang++ $(SOURCE) -o $(NAME)
+	@g++ $(SOURCE) -o $(NAME)
 
 $(OBJ_DIR)/%.o:%.cpp $(HDR)
 	@mkdir -p $(OBJ_DIR)
-	@clang++ -c $(FLAGS) $< -o $@
+	@g++ -c $(FLAGS) $< -o $@
 
 clean:
 	@rm -rf $(OBJ_DIR)
