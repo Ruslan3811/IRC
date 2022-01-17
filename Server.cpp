@@ -98,6 +98,10 @@ void Server::receivingMessages() {
 	}
 }
 
+std::vector<User *> Server::getUsers()const
+{
+	return _UsersAccept;
+}
 
 
 // ЭТО ДЛЯ readMessage в классе User

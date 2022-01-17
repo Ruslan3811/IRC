@@ -26,3 +26,22 @@ int Server::cmdUser(Message &msg, User &user)
 	this->setServerName(msg.getParams()[2]);
 	return (0);
 }
+
+int Server::cmdNick(Message &msg, User &user)
+{
+  	std::vector<User *>::iterator begin = this->getUsers().begin();
+	std::vector<User *>::iterator end = this->getUsers().end();
+
+	for (; begin != end; ++begin)
+	{
+		if (user.getNickName() == (*begin)->getNickName())
+			std::cout << 1;
+		else
+			std::cout << 2;
+	}
+	std::cout << msg.getCmd();
+	return (0);
+}
+
+void get()
+{}

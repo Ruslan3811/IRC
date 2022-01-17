@@ -55,6 +55,11 @@ int User::getSocket()const
     return _socket;
 }
 
+std::string User::getNickName()const
+{
+	return _username;
+}
+
 // Alena
 int User::readMsg() {
     char buf[4096];
