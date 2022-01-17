@@ -57,7 +57,7 @@ int User::getSocket()const
 
 // Alena
 int User::readMsg() {
-    char buf[4096];
+	char buf[4096];
 	std::string msg;
 
 	for(;;) {
@@ -74,16 +74,16 @@ int User::readMsg() {
 				break;
 		}
 
+		if (bytesRecv <= 0) {
+			return (-1);
+		}
+
+	}
+	return (0);
+}
+
 		// int bytesRecv;
 		// while ((bytesRecv = recv(_socket, buf, 4096, 0)) > 0) {
 		// 	buf[bytesRecv] = 0;
 		// 	msg += buf;
 		// }
-		if (bytesRecv <= 0) {
-			return (-1);
-		}
-
-		// Display message
-    }
-    return (0);
-}
