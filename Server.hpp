@@ -44,6 +44,7 @@ public:
 	void listenSocket();
 	void acceptUsers();
 	void receivingMessages();
+	int parseMsg(const int idx);
 
 	int getPort() const { return _port; }
 	const std::string& getPassword() const { return _password; }

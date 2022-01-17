@@ -92,10 +92,19 @@ void Server::receivingMessages() {
 				if (_UsersAccept[idx]->readMsg() == -1)
 					_UsersAccept[idx]->setFlag(-1);
 				// парсим сбщ
+				else if (parseMsg(idx) == -1)
+					_UsersAccept[idx]->setFlag(-1);
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
 	}
 }
 
+int Server::parseMsg(const int idx) {
+	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
+	std::vector<std::string>::iterator it = msg.end();
+	it--;
+	// if (*it == "PASS")
 
+	return 0;
+}

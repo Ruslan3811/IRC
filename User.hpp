@@ -14,6 +14,7 @@ private:
     int         _flag;
     std::string _password;
     std::string _realname;
+	std::vector<std::string> _message;
 public:
     User(void);
     ~User(void);
@@ -33,6 +34,7 @@ public:
 
     // Alena
     int readMsg();
+	std::vector<std::string> getMessage() const;
     void setUserName(std::string username);
     void setUserRealName(std::string realname);
 };
