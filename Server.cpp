@@ -103,7 +103,6 @@ std::vector<User *> Server::getUsers()const
 	return _UsersAccept;
 }
 
-
 // ЭТО ДЛЯ readMessage в классе User
 
 	// char buf[4096];
