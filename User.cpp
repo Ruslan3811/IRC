@@ -55,6 +55,21 @@ int User::getSocket()const
     return _socket;
 }
 
+std::string User::getNickName()const
+{
+	return _username;
+}
+
+bool User::isActiveUser()const
+{
+	return _active;
+}
+
+void User::setActiveUser(bool active)
+{
+	_active = active;
+}
+
 // Alena
 int User::readMsg() {
     char buf[4096];

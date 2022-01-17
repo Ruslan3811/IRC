@@ -14,6 +14,7 @@ private:
     int         _flag;
     std::string _password;
     std::string _realname;
+    bool        _active;
 public:
     User(void);
     ~User(void);
@@ -35,4 +36,8 @@ public:
     int readMsg();
     void setUserName(std::string username);
     void setUserRealName(std::string realname);
+
+    std::string getNickName()const;
+    bool isActiveUser()const;
+    void setActiveUser(bool active);
 };
