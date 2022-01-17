@@ -2,6 +2,26 @@
 
 
 
+void Server::setServerName(std::string servername)
+{
+	_servername = servername;
+}
+
+std::string Server::getServerName(void) const
+{
+	return _servername;
+}
+
+void Server::setHostName(std::string hostname)
+{
+	_hostname = hostname;
+}
+
+std::string Server::getHostName(void) const
+{
+	return _hostname;
+}
+
 void exita(std::string msg) {
 	std::cerr << msg << std::endl;
 	exit(1);

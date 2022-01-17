@@ -51,6 +51,12 @@ public:
 
 	int cmdPass(Message &msg, User &user);
 	int cmdUser(Message &msg, User &user);
+
+	void setServerName(std::string servername);
+	std::string getServerName(void) const;
+
+	void setHostName(std::string hostname);
+	std::string getHostName(void) const;
 };
 
 void exita(std::string msg);

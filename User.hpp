@@ -33,4 +33,6 @@ public:
 
     // Alena
     int readMsg();
+    void setUserName(std::string username);
+    void setUserRealName(std::string realname);
 };
