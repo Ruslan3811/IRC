@@ -10,7 +10,7 @@ private:
     std::vector<std::string> _parameters;
     std::string _trailing;
 public:
-    Message();
+    Message(const std::string str);
     ~Message();
 
     std::vector<std::string> getParams(void) const;
@@ -21,3 +21,6 @@ public:
 
     std::string getTrailing(void); 
 };
+
+// Alena
+std::vector<std::string> split(const std::string str);

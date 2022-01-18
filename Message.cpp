@@ -1,6 +1,10 @@
 #include "Server.hpp"
+#include "Message.hpp"
 
-Message::Message(){}
+Message::Message(const std::string str){
+	std::vector<std::string> vec;
+	vec = split(str);
+}
 
 Message::~Message(){}
 
