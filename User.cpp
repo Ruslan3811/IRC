@@ -72,7 +72,7 @@ void User::setActiveUser(bool active)
 
 // Alena
 int User::readMsg() {
-    char buf[4096];
+	char buf[4096];
 	std::string msg;
 
 	for(;;) {
@@ -88,17 +88,12 @@ int User::readMsg() {
 			if (msg.find('\n') != std::string::npos)
 				break;
 		}
-
-		// int bytesRecv;
-		// while ((bytesRecv = recv(_socket, buf, 4096, 0)) > 0) {
-		// 	buf[bytesRecv] = 0;
-		// 	msg += buf;
-		// }
 		if (bytesRecv <= 0) {
 			return (-1);
 		}
-
-		// Display message
-    }
-    return (0);
+	}
+	_message.push_back(msg);
+	return (0);
 }
+
+std::vector<std::string> User::getMessage() const { return _message; }
