@@ -3,29 +3,47 @@
 
 #include <cstring>
 
-Message::Message(const std::string str)
+Message::Message(const std::string str) : _prefix(""), _cmd("")
 {
-    std::string tmp_str = str;
-    std::string cmd = "";
-    std::vector<std::string> params;
-    std::vector<std::string> trailing;
 	std::vector<std::string> vec;
     
-    std::size_t found = str.find(' ');
 	vec = split(str);
-    for (std::vector<std::string>::iterator i = vec.begin(); i != vec.end(); ++i)
-        std::cout << *i << ", ";
-    if (str[0] != ' ' && found == std::string::npos)
+
+    std::vector<std::string>::iterator i = vec.begin();
+
+    if (vec.front()[0] == ':')
     {
-        cmd = str;
-        std::cout << "First condition\n" << found;
+        _prefix = vec.front();
+        ++i;
     }
-    else if (str[0] != ':')
+    
+    for (; i != vec.end(); ++i)
     {
-        cmd = tmp_str.substr(0, found);
-        tmp_str.erase(0, found + 1);
+        if ((*i)[0] == ':')
+            break;
+        if ((*i)[0] != ':' && !_cmd.length())
+            _cmd = *i;
+        else if ((*i)[0] != ':')
+            _parameters.push_back(*i);
     }
-    std::cout << tmp_str;
+
+    std::cout << "PREFIX: " << _prefix << " CMD: " << _cmd << " " << " PARAMS: ";
+
+    // for (i = params.begin(); i != params.end(); ++i)
+    // {
+    //     std::cout << *i;
+    // }
+
+    for (; i != vec.end(); ++i)
+    {
+        _trailing.push_back(*i);
+    }
+
+    for (i = _trailing.begin(); i != _trailing.end(); ++i)
+    {
+        std::cout << *i;
+    }
+    
 }
 
 Message::~Message(){}
@@ -50,7 +68,7 @@ void Message::setCmd(std::string cmd)
     _cmd = cmd;
 }
 
-std::string Message::getTrailing()
+std::vector<std::string> &Message::getTrailing()
 {
     return _trailing;
 }
