@@ -21,3 +21,6 @@ public:
 
     std::string getTrailing(void); 
 };
+
+// Alena
+std::vector<std::string> split(const std::string str);
