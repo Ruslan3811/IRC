@@ -1,9 +1,31 @@
 #include "Server.hpp"
 #include "Message.hpp"
 
-Message::Message(const std::string str){
+#include <cstring>
+
+Message::Message(const std::string str)
+{
+    std::string tmp_str = str;
+    std::string cmd = "";
+    std::vector<std::string> params;
+    std::vector<std::string> trailing;
 	std::vector<std::string> vec;
+    
+    std::size_t found = str.find(' ');
 	vec = split(str);
+    for (std::vector<std::string>::iterator i = vec.begin(); i != vec.end(); ++i)
+        std::cout << *i << ", ";
+    if (str[0] != ' ' && found == std::string::npos)
+    {
+        cmd = str;
+        std::cout << "First condition\n" << found;
+    }
+    else if (str[0] != ':')
+    {
+        cmd = tmp_str.substr(0, found);
+        tmp_str.erase(0, found + 1);
+    }
+    std::cout << tmp_str;
 }
 
 Message::~Message(){}
