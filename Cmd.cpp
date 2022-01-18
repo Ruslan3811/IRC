@@ -33,6 +33,7 @@ int Server::cmdUser(Message &msg, User &user)
 //нужна функция определяющая в сети пользователь или нет
 int Server::cmdNick(Message &msg, User &user)
 {
+//msg->cmd и msg->params - не распарсенные
     std::vector<User *>::iterator begin = this->getUsers().begin();
 	std::vector<User *>::iterator end = this->getUsers().end();
     std::string nickname = "";
@@ -94,3 +95,4 @@ int Server::cmdNick(Message &msg, User &user)
     user.setUserName(nickname);
 	return (0);
 }
+

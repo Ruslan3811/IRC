@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Message::Message(){}
+Message::Message(std::string string){}
 
 Message::~Message(){}
 
