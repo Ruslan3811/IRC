@@ -87,10 +87,12 @@ void Server::receivingMessages() {
 		std::vector<pollfd>::iterator it2 = _fdUsers.end();
 		for (; it != it2; ++it) {
 			if (it->revents == POLLIN) { // если произошло событие
-				// читаем сообщение
 				int idx = it - _fdUsers.begin();
-				idx += 0;
+				// читаем сообщение
 				if (_UsersAccept[idx]->readMsg() == -1)
+					_UsersAccept[idx]->setFlag(-1);
+				// парсим сбщ
+				else if (parseMsg(idx) == -1)
 					_UsersAccept[idx]->setFlag(-1);
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
@@ -103,28 +105,11 @@ std::vector<User *> Server::getUsers()const
 	return _UsersAccept;
 }
 
-// ЭТО ДЛЯ readMessage в классе User
+int Server::parseMsg(const int idx) {
+	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
+	std::vector<std::string>::iterator it = msg.end();
+	it--;
+	// if (*it == "PASS")
 
-	// char buf[4096];
-
-	// for(;;) {
-	// 	// Clear the buffer
-	// 	memset(buf, 0, 4096);
-
-	// 	// Wait for a message
-	// 	int bytesRecv = recv(_clientSocket, buf, 4096, 0);
-	// 	if (bytesRecv == -1) {
-	// 		std::cout << "There was a connection issue!" << std::endl;
-	// 		break ;
-	// 	}
-	// 	if (bytesRecv == 0) {
-	// 		std::cout << "The client disconnected!" << std::endl;
-	// 		break ;
-	// 	}
-
-	// 	// Display message
-	// 	std::cout << "Received: " << std::string(buf, 0, bytesRecv) << std::endl;
-	// 	send(_clientSocket, buf, bytesRecv + 1, 0);
-
-	// 	// Resend message
-	// }
+	return 0;
+}
