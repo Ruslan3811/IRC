@@ -109,6 +109,7 @@ int Server::parseMsg(const int idx) {
 	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 	std::vector<std::string>::iterator it = msg.end();
 	it--;
+	Message message(*it);
 	// if (*it == "PASS")
 
 	return 0;
