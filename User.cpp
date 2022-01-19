@@ -85,8 +85,10 @@ int User::readMsg() {
 			buf[bytesRecv] = 0;
 			msg += buf;
 			std::cout  << msg;
-			if (msg.find('\n') != std::string::npos)
+			if (msg.find('\n') != std::string::npos) {
+				msg.erase(msg.find('\n'), 1);
 				break;
+			}
 		}
 		if (bytesRecv <= 0) {
 			return (-1);

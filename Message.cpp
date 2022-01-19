@@ -29,16 +29,16 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
 
     std::cout << "PREFIX: " << _prefix << " CMD: " << _cmd << " " << " PARAMS: ";
 
-    // for (i = params.begin(); i != params.end(); ++i)
-    // {
-    //     std::cout << *i;
-    // }
+    for (i = _parameters.begin(); i != _parameters.end(); ++i)
+    {
+        std::cout << *i << " ";
+    }
 
-    for (; i != vec.end(); ++i)
+    for (i = vec.begin(); i != vec.end(); ++i)
     {
         _trailing.push_back(*i);
     }
-
+	std::cout << " TRAILING: ";
     for (i = _trailing.begin(); i != _trailing.end(); ++i)
     {
         std::cout << *i;

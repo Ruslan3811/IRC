@@ -31,7 +31,13 @@ Server::Server(int port, const std::string &password) : _port(port), _password(p
 	_servername = "IRC";
 }
 
-Server::~Server() {}
+Server::~Server() {
+	std::vector<User *>::iterator it = _UsersAccept.begin();
+	std::vector<User *>::iterator it2 = _UsersAccept.end();
+	for (; it != it2; ++it) {
+		delete *it;
+	}
+}
 
 void Server::createSocket() {
 	_listening = socket(AF_INET, SOCK_STREAM, 0);
