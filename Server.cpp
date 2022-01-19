@@ -29,6 +29,9 @@ void exita(std::string msg) {
 
 Server::Server(int port, const std::string &password) : _port(port), _password(password) {
 	_servername = "IRC";
+	_command["PASS"] = &Server::cmdPass;
+	// _command["NICK"] = &Server::cmdNick;
+	_command["USER"] = &Server::cmdUser;
 }
 
 Server::~Server() {
@@ -116,6 +119,9 @@ int Server::parseMsg(const int idx) {
 	std::vector<std::string>::iterator it = msg.end();
 	it--;
 	Message message(*it);
-
+	if (_UsersAccept[idx]->getRegistered() < 3 && (message.getCmd() == "PASS" || message.getCmd() == "NICK" || message.getCmd() == "USER")) {
+		_UsersAccept[idx]->setRegistered(1);
+		std::cout << "Registr: " << _UsersAccept[idx]->getRegistered() << std::endl;
+	}
 	return 0;
 }

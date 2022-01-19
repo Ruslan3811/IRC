@@ -2,6 +2,7 @@
 
 User::User(int socket, std::string host): _socket(socket), _host(host){
 	_flag = 0;
+	_registered = 0;
 }
 
 User::User(void): _flag(0){}
@@ -86,7 +87,8 @@ int User::readMsg() {
 			msg += buf;
 			std::cout  << msg;
 			if (msg.find('\n') != std::string::npos) {
-				msg.erase(msg.find('\n'), 1);
+				if (msg[0] != '\n')
+					msg.erase(msg.find('\n'), 1);
 				break;
 			}
 		}
@@ -99,3 +101,7 @@ int User::readMsg() {
 }
 
 std::vector<std::string> User::getMessage() const { return _message; }
+
+int User::getRegistered() const { return _registered; }
+
+void User::setRegistered(int registered) { _registered += registered; }

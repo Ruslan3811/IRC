@@ -20,6 +20,9 @@
 #include "User.hpp"
 
 class User;
+class Server;
+
+typedef int (Server::*Cmd) (Message &, User &);
 
 class Server {
 private:
@@ -32,6 +35,7 @@ private:
 	std::string			_servername;
 	std::string 		_hostname;
 	int					_clientSocket;
+	std::map<std::string, Cmd> _command;
 
 	Server();
 	Server(const Server& copy);
