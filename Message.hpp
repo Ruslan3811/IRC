@@ -9,7 +9,7 @@ private:
     std::string _prefix;
     std::string _cmd;
     std::vector<std::string> _parameters;
-    std::vector<std::string> _trailing;
+    std::string _trailing;
 public:
     Message(const std::string str);
     ~Message();
@@ -20,7 +20,7 @@ public:
     std::string getCmd(void) const;
     void setCmd(std::string cmd);
 
-    std::vector<std::string> &getTrailing();
+    std::string &getTrailing();
 };
 
 // Alena
