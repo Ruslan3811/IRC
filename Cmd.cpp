@@ -1,15 +1,15 @@
 #include "Server.hpp"
 #include "Errors.hpp"
-
+//доделать
 int Server::Connection(User &user)
 {
 	if (user.IsTrueLength(user.getNickName()) > 0 && user.IsTrueLength(user.getRealName()) > 0)
 		if (user.IsTrueLength(_password) == 0 || user.getPassword())
 		{
-			if (!(user.getRegistered() == 3))
-			{
-				user.setFlag();//
-			}
+			// if (!(user.getRegistered() == 3))
+			// {
+			// 	// user.setFlag();//
+			// }
 		}
 		else
 			return (-1);
