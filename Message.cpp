@@ -88,3 +88,8 @@ std::string &Message::getTrailing()
 {
     return _trailing;
 }
+
+std::string &Message::getPrefix()
+{
+    return _prefix;
+}

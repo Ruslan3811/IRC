@@ -8,6 +8,17 @@ User::User(void): _flag(0){}
 
 User::~User(void){}
 
+std::string User::getRealName()const
+{
+	return _realname;
+}
+
+std::string User::getPassword()const
+{
+	return _password;
+}
+
+
 void User::setUserRealName(std::string realname)
 {
     _realname = realname;

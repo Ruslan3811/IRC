@@ -18,8 +18,10 @@
 #include <fstream>
 #include <map>
 #include "User.hpp"
+#include "Message.hpp"
 
 class User;
+class Message;
 
 class Server {
 private:
@@ -62,6 +64,8 @@ public:
 	std::string getHostName(void) const;
 
 	std::vector<User *> getUsers()const;
+
+	int Connection(User &user);
 };
 
 void exita(std::string msg);
