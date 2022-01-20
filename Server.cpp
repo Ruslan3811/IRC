@@ -38,6 +38,7 @@ Server::~Server() {
 	std::vector<User *>::iterator it = _UsersAccept.begin();
 	std::vector<User *>::iterator it2 = _UsersAccept.end();
 	for (; it != it2; ++it) {
+		close((*it)->getSocket());
 		delete *it;
 	}
 }
