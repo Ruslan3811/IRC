@@ -24,6 +24,7 @@ private:
     std::string _password;
     std::string _realname;
     bool        _active;
+	int			_registered;
 	std::vector<std::string> _message;
 public:
     User(void);
@@ -44,6 +45,8 @@ public:
 
     // Alena
     int readMsg();
+	int getRegistered() const;
+	void setRegistered(int registered);
 	std::vector<std::string> getMessage() const;
     void setUserName(std::string username);
     void setUserRealName(std::string realname);
