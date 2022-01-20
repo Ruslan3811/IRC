@@ -9,20 +9,12 @@ int main(int ac, char **av) {
 			return -1;
 		}
 		Server serv(atoi(av[1]), av[2]);
-
-		// Create a socket
 		serv.createSocket();
-
-		// Bind the socket to a IP / port
 		serv.bindSocket();
-
-		// Mark the socket for listening in
 		serv.listenSocket();
-
-		for(;;) {
-			// Accept a call
+		while (1)
+		{
 			serv.acceptUsers();
-			// While receiving - display message, echo message
 			serv.receivingMessages();
 		}
 	}

@@ -4,12 +4,12 @@
 
 void Server::setServerName(std::string servername)
 {
-	_servername = servername;
+	_serverName = servername;
 }
 
 std::string Server::getServerName(void) const
 {
-	return _servername;
+	return _serverName;
 }
 
 void Server::setHostName(std::string hostname)
@@ -28,7 +28,7 @@ void exita(std::string msg) {
 }
 
 Server::Server(int port, const std::string &password) : _port(port), _password(password) {
-	_servername = "IRC";
+	_serverName = "IRC";
 }
 
 Server::~Server() {
@@ -98,8 +98,7 @@ void Server::receivingMessages() {
 				if (_UsersAccept[idx]->readMsg() == -1)
 					_UsersAccept[idx]->setFlag(-1);
 				// парсим сбщ
-				else if (parseMsg(idx) == -1)
-					_UsersAccept[idx]->setFlag(-1);
+				Command A(parseMsg(idx), *_UsersAccept[idx]);
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
@@ -111,11 +110,11 @@ std::vector<User *> Server::getUsers()const
 	return _UsersAccept;
 }
 
-int Server::parseMsg(const int idx) {
+Message Server::parseMsg(const int idx)
+{
 	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 	std::vector<std::string>::iterator it = msg.end();
 	it--;
 	Message message(*it);
-
-	return 0;
+	return message;
 }

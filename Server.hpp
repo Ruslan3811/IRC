@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <fstream>
 #include <map>
-#include "User.hpp"
+#include "cmd.hpp"
 
 class User;
 
@@ -29,7 +29,7 @@ private:
 	sockaddr_in			_sockaddr;
 	std::vector<pollfd>	_fdUsers;
 	std::vector<User *>	_UsersAccept;
-	std::string			_servername;
+	std::string			_serverName;
 	std::string 		_hostname;
 	int					_clientSocket;
 
@@ -45,15 +45,11 @@ public:
 	void listenSocket();
 	void acceptUsers();
 	void receivingMessages();
-	int parseMsg(const int idx);
+	Message parseMsg(const int idx);
 
 	int getPort() const { return _port; }
 	const std::string& getPassword() const { return _password; }
 	int getClientSocket() const { return _clientSocket; }
-
-	int cmdPass(Message &msg, User &user);
-	int cmdUser(Message &msg, User &user);
-	int cmdNick(Message &msg, User &user);
 
 	void setServerName(std::string servername);
 	std::string getServerName(void) const;
@@ -61,7 +57,7 @@ public:
 	void setHostName(std::string hostname);
 	std::string getHostName(void) const;
 
-	std::vector<User *> getUsers()const;
+	std::vector<User *> getUsers() const;
 };
 
 void exita(std::string msg);
