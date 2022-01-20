@@ -99,7 +99,7 @@ void Server::receivingMessages() {
 				if (_UsersAccept[idx]->readMsg() == -1)
 					_UsersAccept[idx]->setFlag(-1);
 				// парсим сбщ
-				Command A(parseMsg(idx), *_UsersAccept[idx]);
+				Command A(parseMsg(idx), _UsersAccept[idx]);
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}

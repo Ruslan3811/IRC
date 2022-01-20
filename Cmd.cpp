@@ -3,15 +3,15 @@
 #include "exeption.hpp"
 
 
-Command::Command(const Message & msg,const User & user) : _msg(msg), _user(user) {}
+Command::Command(const Message & msg, User * user) : _msg(msg), _user(user) {}
 void Command::cmdPass()
 {
 	std::string password = _msg.getParams().front();
-    if (!_user.IsTrueLength(password))
-		throw errorRequest(_msg, _user, ERR_NEEDMOREPARAMS);
-	else if (_user.isAlreadyRegistered())
-		throw errorRequest(_msg, _user, ERR_ALREADYREGISTRED);
-	_user.setPassword(password);
+    if (!_user->IsTrueLength(password))
+		throw errorRequest(_msg, *_user, ERR_NEEDMOREPARAMS);
+	else if (_user->isAlreadyRegistered())
+		throw errorRequest(_msg, *_user, ERR_ALREADYREGISTRED);
+	_user->setPassword(password);
 }
 
 void Command::cmdUser()
@@ -19,11 +19,11 @@ void Command::cmdUser()
 	std::string realname = _msg.getTrailing();
 
 	if (_msg.getParams().size() != 3 || realname.length() == 1)
-		throw errorRequest(_msg, _user, ERR_NEEDMOREPARAMS);
-	else if (_user.isAlreadyRegistered())
-		throw errorRequest(_msg, _user, ERR_ALREADYREGISTRED);
-	_user.setUserName(_msg.getParams()[0]);
-	_user.setUserRealName(_msg.getTrailing().erase(0, 1));
+		throw errorRequest(_msg, *_user, ERR_NEEDMOREPARAMS);
+	else if (_user->isAlreadyRegistered())
+		throw errorRequest(_msg, *_user, ERR_ALREADYREGISTRED);
+	_user->setUserName(_msg.getParams()[0]);
+	_user->setUserRealName(_msg.getTrailing().erase(0, 1));
 }
 
 

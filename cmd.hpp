@@ -7,10 +7,10 @@ class  Command
 {
     private:
         Message _msg;
-        User    _user;
+        User    *_user;
 
     public:
-        Command(const Message & msg,const User & user);
+        Command(const Message & msg, User * user);
         void cmdPass(void);
 	    void cmdUser(void);
 	    void cmdNick(void);
