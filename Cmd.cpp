@@ -4,15 +4,17 @@
 int Server::Connection(User &user)
 {
 	if (user.IsTrueLength(user.getNickName()) > 0 && user.IsTrueLength(user.getRealName()) > 0)
-		if (user.IsTrueLength(_password) == 0 || user.getPassword())
+	{
+		if (user.IsTrueLength(_password) == 0 || user.getPassword() == _password)
 		{
 			// if (!(user.getRegistered() == 3))
 			// {
-			// 	// user.setFlag();//
+			// 	user.setFlag();
 			// }
 		}
 		else
 			return (-1);
+	}
 	else
 		return (0);
 }
@@ -71,65 +73,6 @@ int Server::cmdNick(Message &msg, User &user)
 	}
 	if (':' + user.getNickName() ==  nickname or msg.getPrefix().length() == 0)
 		user.setUserName(nickname);
-
-    // std::vector<User *>::iterator begin = this->getUsers().begin();
-	// std::vector<User *>::iterator end = this->getUsers().end();
-    // std::string nickname = "";
-    // if (msg.getParams().size())
-    // {
-    //     if (user.getNickName().length() > 0)
-    //     { 
-    //         std::cout << "this user already has got nickname";
-    //         return (0);
-    //     }
-    //     for (;begin != end;++begin)
-    //     {
-    //         if (msg.getParams().front() == (*begin)->getNickName() && (*begin)->isActiveUser())
-    //         {
-    //             std::cout << "ERR_NICKNAMEINUSE" << std::endl;
-    //             return (0);
-    //             // return sendErr(msg, user,  ERR_NICKNAMEINUSE);
-    //         }
-    //     }
-    //     nickname = msg.getParams().front();
-    // }
-    // else if (msg.getTrailing().length() == 0 && msg.getParams().front().length() == 0)
-    // {
-    //     std::cout << "ERR_NONICKNAMEGIVEN" << std::endl;
-    //     return (0);
-    // }
-
-
-    // for (size_t c = 0;  c < nickname.length(); ++c)
-    // {
-    //     if (nickname[c] != ' ' && (nickname[c] < '0' || nickname[c] > '9') && (nickname[c] < 'a' || nickname[c] > 'z') && (nickname[c] < 'A' || nickname[c] > 'Z'))
-    //     {
-    //         std::cout << "ERR_ERRONEUSNICKNAME" << std::endl;
-    //         return (0);
-    //         // return sendErr(msg, user, ERR_ERRONEUSNICKNAME);
-    //     }    
-    // }
-
-    // std::string trailing = msg.getTrailing();
-    
-    // if (msg.getTrailing().length() > 0 && nickname.length() == 0)
-    // {
-    //     trailing.erase(0, 1);
-    //     std::string old_nick = trailing.substr(0, trailing.find(" "));
-    //     trailing.erase(0, trailing.find(" "));
-    //     int i = 0;
-    //     for (; trailing[i] == ' '; ++i){}
-    //     trailing.erase(0, i);
-    //     i = 0;
-    //     for (; trailing[i] != ' ' && trailing[i]; ++i){}
-    //     std::string nick = trailing.substr(0, i);
-    //     trailing.erase(0, i);
-    //     i = 0;
-    //     for (; trailing[i] == ' '; ++i){}
-    //     trailing.erase(0, i);
-    //     nickname = trailing;    
-    // }
-    // user.setUserName(nickname);
 	return (0);
 }
 
