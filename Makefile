@@ -1,23 +1,23 @@
 NAME = ircserv
 
-SOURCE = main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_func.cpp Exeption.cpp
+SOURCE = main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_func.cpp Exception.cpp
 
 OBJ_DIR = .obj
 
-HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exeption.hpp Cmd.hpp
+HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exception.hpp Cmd.hpp
 
-FLAGS = --std=c++11
+FLAGS = -Wall -Wextra -Werror --std=c++98
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SOURCE:.cpp=.o))
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	clang++ $(OBJ) -o $(NAME)
+	@clang++ $(OBJ) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.cpp
-	mkdir -p $(OBJ_DIR)
-	clang++ -c $(FLAGS) $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	@clang++ -c $(FLAGS) $< -o $@
 
 clean:
 	@rm -rf $(OBJ_DIR)
