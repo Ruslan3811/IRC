@@ -99,7 +99,11 @@ void Server::receivingMessages() {
 				if (_UsersAccept[idx]->readMsg() == -1)
 					_UsersAccept[idx]->setFlag(-1);
 				// парсим сбщ
-				Command A(parseMsg(idx), _UsersAccept[idx]);
+				std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
+				std::vector<std::string>::iterator it = msg.end();
+				it--;
+				Message message(*it);
+				Command A(message, _UsersAccept[idx]);
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
@@ -111,11 +115,17 @@ std::vector<User *> Server::getUsers()const
 	return _UsersAccept;
 }
 
-Message Server::parseMsg(const int idx)
-{
-	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
-	std::vector<std::string>::iterator it = msg.end();
-	it--;
-	Message message(*it);
-	return message;
-}
+// Message Server::parseMsg(const int idx)
+// {
+// 	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
+// 	std::vector<std::string>::iterator it = msg.end();
+// 	it--;
+// 	Message message(*it);
+// 	return message;
+// }
+
+
+// if (_UsersAccept[idx]->getRegistered() < 3 && (message.getCmd() == "PASS" || message.getCmd() == "NICK" || message.getCmd() == "USER")) {
+// 		_UsersAccept[idx]->setRegistered(1);
+// 		std::cout << "Registr: " << _UsersAccept[idx]->getRegistered() << std::endl;
+// 	}

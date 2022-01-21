@@ -14,7 +14,7 @@ class errorRequest : public std::exception
     {
         _errorMessege = _getErrorMessage(codeError);
     }
-    void what() noexcept;
+    void what() throw();
     private:
     std::string _getErrorMessage(int codeError);
 };

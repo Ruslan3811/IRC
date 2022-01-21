@@ -1,9 +1,27 @@
 #include "Server.hpp"
-#include "cmd.hpp"
-#include "exeption.hpp"
+#include "Cmd.hpp"
+#include "Exception.hpp"
 
 
-Command::Command(const Message & msg, User * user) : _msg(msg), _user(user) {}
+Command::Command(const Message & msg, User * user) : _msg(msg), _user(user) {
+	_command["PASS"] = &Command::cmdPass;
+	// _command["NICK"] = &Command::cmdNick;
+	_command["USER"]= &Command::cmdUser;
+	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
+		user->setRegistered(1);
+		std::cout << "Registr: " << user->getRegistered() << std::endl;
+	}
+	try
+	{
+		(this->*(_command.at(msg.getCmd())))();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+}
+
 void Command::cmdPass()
 {
 	std::string password = _msg.getParams().front();

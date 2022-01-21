@@ -17,12 +17,12 @@
 #include <errno.h>
 #include <fstream>
 #include <map>
-#include "cmd.hpp"
+#include "Cmd.hpp"
 
 class User;
 class Server;
 
-typedef int (Server::*Cmd) (Message &, User &);
+// typedef int (Server::*Cmd) (Message &, User &);
 
 class Server {
 private:
@@ -35,7 +35,7 @@ private:
 	std::string			_serverName;
 	std::string 		_hostname;
 	int					_clientSocket;
-	std::map<std::string, Cmd> _command;
+	// std::map<std::string, Cmd> _command;
 
 	Server();
 	Server(const Server& copy);
