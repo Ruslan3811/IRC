@@ -1,13 +1,13 @@
 NAME = ircserv
 
-SOURCE = main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_func.cpp Exeption.cpp
+SOURCE = main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_func.cpp Exсeption.cpp
 
 OBJ_DIR = .obj
 
-HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exeption.hpp Cmd.hpp
+HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exсeption.hpp Cmd.hpp
 
-FLAGS = -Wall -Wextra -Werror --std=c++98
-
+FLAGS =  --std=c++98
+# -Werror-Wall -Wextra 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SOURCE:.cpp=.o))
 
 all: $(NAME)

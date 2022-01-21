@@ -1,6 +1,6 @@
 #include "Exception.hpp"
 #include "Server.hpp"
-    void errorRequest::what() throw()
+    const char * errorRequest::what() const throw()
     {
         send(_user.getSocket(), _errorMessege.c_str(), _errorMessege.length(), 16384); 
     }
