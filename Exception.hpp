@@ -2,6 +2,7 @@
 #include <exception>
 #include "Message.hpp"
 #include "User.hpp"
+#include "Server.hpp"
 
 class errorRequest : public std::exception
 {
@@ -14,7 +15,12 @@ class errorRequest : public std::exception
     {
         _errorMessege = _getErrorMessage(codeError);
     }
-    void what() throw();
+    virtual const char* what() const throw ()
+    {
+        send(_user.getSocket(), _errorMessege.c_str(), _errorMessege.length(), 16384); 
+        return "d";
+    }
+    virtual ~errorRequest() throw() {}
     private:
     std::string _getErrorMessage(int codeError);
 };

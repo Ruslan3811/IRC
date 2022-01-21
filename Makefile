@@ -6,7 +6,7 @@ OBJ_DIR = .obj
 
 HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exeption.hpp Cmd.hpp
 
-FLAGS = -Wall -Wextra -Werror --std=c++98
+FLAGS = --std=c++11
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SOURCE:.cpp=.o))
 
