@@ -1,6 +1,5 @@
 #include "Server.hpp"
 #include "Cmd.hpp"
-#include "Exception.hpp"
 
 
 Command::Command(const Message & msg, User * user) : _msg(msg), _user(user) {
