@@ -1,9 +1,4 @@
 #include "exeption.hpp"
-#include "Server.hpp"
-    void errorRequest::what() noexcept
-    {
-        send(_user.getSocket(), _errorMessege.c_str(), _errorMessege.length(), 16384); 
-    }
 
     std::string errorRequest::_getErrorMessage(int codeError)
     {
