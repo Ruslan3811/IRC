@@ -3,6 +3,9 @@
 User::User(int socket, std::string host): _socket(socket), _host(host){
 	_flag = 0;
 	_registered = 0;
+	_fNick = 0;
+	_fUser = 0;
+	_fPass = 0;
 }
 
 User::User(void): _flag(0){}
@@ -105,3 +108,16 @@ std::vector<std::string> User::getMessage() const { return _message; }
 int User::getRegistered() const { return _registered; }
 
 void User::setRegistered(int registered) { _registered += registered; }
+
+
+void User::setfNick(int flag) { _fNick += flag; }
+
+int User::getfNick() const { return _fNick; }
+
+void User::setfUser(int flag) { _fUser += flag; }
+
+int User::getfUser() const { return _fUser; }
+
+void User::setfPass(int flag) { _fPass += flag; }
+
+int User::getfPass() const { return _fPass; }
