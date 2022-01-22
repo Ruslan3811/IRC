@@ -99,11 +99,16 @@ void Server::receivingMessages() {
 				if (_UsersAccept[idx]->readMsg() == -1)
 					_UsersAccept[idx]->setFlag(-1);
 				// парсим сбщ
-				std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
-				std::vector<std::string>::iterator it = msg.end();
-				it--;
-				Message message(*it);
-				Command A(message, _UsersAccept[idx]);
+				try
+				{
+					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
+					Message message(*(--msg.end()));
+					Command A(message, _UsersAccept[idx], _UsersAccept);
+				}
+				catch (const std::exception & ex)
+				{
+					send(_UsersAccept[idx]->getSocket(), ex.what(), std::string(ex.what()).size(), IRC_NOSIGNAL);
+				}
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}

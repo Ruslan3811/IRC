@@ -17,7 +17,13 @@
 #include <errno.h>
 #include <fstream>
 #include <map>
-#include "Cmd.hpp"
+#include "cmd.hpp"
+
+#ifdef __APPLE__
+#define IRC_NOSIGNAL SO_NOSIGPIPE
+#else
+#define IRC_NOSIGNAL MSG_NOSIGNAL
+#endif
 
 class User;
 class Server;

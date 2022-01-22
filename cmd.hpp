@@ -15,11 +15,14 @@ class  Command
     private:
         Message _msg;
         User    *_user;
+        std::vector<User *> & _users;
 		std::map<std::string, Cmd> _command;
 
     public:
-        Command(const Message & msg, User * user);
+        Command(const Message & msg, User * user, std::vector<User *> & users);
         void cmdPass(void);
 	    void cmdUser(void);
 	    void cmdNick(void);
+
+        void cmdMode(void);
 };
