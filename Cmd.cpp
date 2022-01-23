@@ -1,5 +1,5 @@
 #include "Server.hpp"
-#include "cmd.hpp"
+#include "Cmd.hpp"
 
 
 Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels) 
