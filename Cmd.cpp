@@ -2,7 +2,8 @@
 #include "cmd.hpp"
 
 
-Command::Command(const Message & msg, User * user, std::vector<User *> & users) : _msg(msg), _user(user), _users(users) {
+Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels) 
+: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false) {
 
 	_command["PASS"] = &Command::cmdPass;
 	_command["NICK"] = &Command::cmdNick;
@@ -11,14 +12,7 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users) 
 		user->setRegistered(1);
 		std::cout << "Registr: " << user->getRegistered() << std::endl;
 	}
-	try
-	{
-		(this->*(_command.at(msg.getCmd())))();
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
+	(this->*(_command.at(msg.getCmd())))();
 	
 }
 
@@ -72,9 +66,69 @@ void Command::cmdNick()
 }
 
 //chanel command
+
+void Command::PrintMsg()
+{
+	std::vector<std::string> param = _msg.getParams();
+	std::vector<std::pair<std::string, bool> > userAndChanel;
+	std::string	messegeFromUser = _msg.getTrailing();
+	if (param.size() < 1)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	for (size_t i = 0; i < param.size(); ++i)
+	{
+		bool userExist = false;
+		for (size_t j = 0; j < _users.size(); ++j)
+		{
+			if (_users[j]->getNickName() == param[i])
+			{
+				userAndChanel.push_back(std::make_pair(param[i], true));
+				userExist = true;
+				break;
+			}
+		}
+		for (size_t j = 0; j < _channels.size(); ++j)
+		{
+			if (_channels[j]->getChannelName() == param[i])
+			{
+				userAndChanel.push_back(std::make_pair(param[i], false));
+				userExist = true;
+				break;
+			}
+		}
+		if (userExist == false && i == 0)
+		{
+			throw errorRequest(param[i], _user->getNickName(), ERR_NOSUCHNICK);
+		}
+		else if (userExist == false)
+		{
+			messegeFromUser = param[i];
+			break;
+		}
+	}
+	for (size_t i = 0; i < userAndChanel.size(); ++i)
+	{
+		if (userAndChanel[i].second == true)
+		{
+			for (size_t j = 0; j < _users.size(); ++j)	
+			{
+				if (_users[j]->getNickName() == userAndChanel[i].first)
+				{
+					send(_users[j]->getSocket(), messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
+				}
+			}
+		}
+	}
+}
+
+<<<<<<< HEAD
+=======
+std::pair<std::vector<std::string>, std::string> Command::getResponseForComand() const
+{
+	return _response;
+}
+
 void Command::cmdMode()
 {
 	
-
 }
-
+>>>>>>> main

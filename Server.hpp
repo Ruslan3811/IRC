@@ -18,7 +18,7 @@
 #include <fstream>
 #include <map>
 #include "cmd.hpp"
-
+#include "Channel.hpp"
 #ifdef __APPLE__
 #define IRC_NOSIGNAL SO_NOSIGPIPE
 #else
@@ -38,6 +38,7 @@ private:
 	sockaddr_in			_sockaddr;
 	std::vector<pollfd>	_fdUsers;
 	std::vector<User *>	_UsersAccept;
+	std::vector<Channel *> _channels;
 	std::string			_serverName;
 	std::string 		_hostname;
 	int					_clientSocket;

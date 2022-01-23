@@ -1,14 +1,5 @@
 #include "Exception.hpp"
-
-enum ERRORS
-{
-    ERR_NONICKNAMEGIVEN = 431,
-    ERR_ERRONEUSNICKNAME = 432,
-    ERR_NICKNAMEINUSE = 433,
-    ERR_NICKCOLLISION = 436,
-    ERR_NEEDMOREPARAMS = 461,
-    ERR_ALREADYREGISTRED = 462,
-};
+#include "CodeError.hpp"
 
 std::string errorRequest::_getErrorMessage(int codeError)
 {
@@ -26,6 +17,8 @@ std::string errorRequest::_getErrorMessage(int codeError)
 			return _user + " :Nickname is already in use\n";
 		case ERR_NICKCOLLISION:
 			return _user + " :Nickname is already in use\n";
+		case ERR_NOSUCHNICK:
+			return _msg + " :No such nick/channel";
 	}
 	return "type error not found";
 }
