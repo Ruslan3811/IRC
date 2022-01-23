@@ -61,6 +61,11 @@ int User::getSocket()const
     return _socket;
 }
 
+std::string User::getRealName()const
+{
+	return _realname;
+}
+
 std::string User::getNickName()const
 {
 	return _username;

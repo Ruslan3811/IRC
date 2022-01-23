@@ -21,6 +21,7 @@ public:
     void setCmd(std::string cmd);
 
     std::string &getTrailing();
+    std::string &getPrefix();
 };
 
 // Alena

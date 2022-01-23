@@ -50,6 +50,7 @@ public:
 	void setfPass(int flag);
 	int getfPass() const;
 
+    std::string getRealName()const;
     std::string getNickName()const;
     bool isActiveUser()const;
     void setActiveUser(bool active);
