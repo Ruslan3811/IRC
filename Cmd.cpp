@@ -2,30 +2,34 @@
 #include "Cmd.hpp"
 
 
-Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels) 
-: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false) 
+Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels, std::string servPass) 
+: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false), _servPass(servPass)
 {
 	_command["PASS"] = &Command::cmdPass;
 	_command["NICK"] = &Command::cmdNick;
 	_command["USER"]= &Command::cmdUser;
 	_command["PRIVMSG"]= &Command::PrivMsg;
 
-	// if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
-	// 	if (msg.getCmd() == "PASS" && user->getfPass() == 0)
-	// 		user->setfPass(1);
-	// 	else if (msg.getCmd() == "NICK" && user->getfNick() == 0)
-	// 		user->setfNick(1);
-	// 	else if (msg.getCmd() == "USER" && user->getfUser() == 0)
-	// 		user->setfUser(1);
-	// 	user->setRegistered(1);
-	// 	std::cout << "Registr: " << user->getRegistered() << std::endl;
-	// }
-	// else
-	// 	throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
+	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
+		throw errorRequest(_msg.getCmd(), user->getNickName(), ERR_NOTREGISTERED);
+
 	if (_command.find(msg.getCmd()) == _command.end())
 		throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
 	(this->*(_command.at(msg.getCmd())))();
-	
+}
+
+void Command::checkConnection() {
+	if (_user->getNickName().size() > 0 && _user->getUserName().size() > 0) {
+		if (_servPass.size() == 0 || _user->getPassword() == _servPass) {
+			if (_user->getRegistered() == false) {
+				_user->setRegistered(true);
+				// sendMOTD(_user);
+			}
+		}
+		else {
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NOTREGISTERED);
+		}
+	}
 }
 
 void Command::cmdPass()
@@ -46,6 +50,7 @@ void Command::cmdUser()
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ALREADYREGISTRED);
 	_user->setUserName(_msg.getParams().front());
 	_user->setUserRealName(_msg.getTrailing().erase(0, 1));
+	checkConnection();
 }
 
 void Command::cmdNick()
@@ -74,7 +79,8 @@ void Command::cmdNick()
 		if (nickname == (*begin)->getNickName() && (*begin)->isActiveUser())
 			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NICKNAMEINUSE);
 	}
-	_user->setUserName(nickname);
+	_user->setNickName(nickname);
+	checkConnection();
 }
 
 //chanel command

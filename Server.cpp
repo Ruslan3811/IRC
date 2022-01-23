@@ -108,7 +108,7 @@ void Server::receivingMessages() {
 					if (msg.size() != 0)
 					{
 						Message message(*(--msg.end()));
-						Command A(message, _UsersAccept[idx], _UsersAccept, _channels);
+						Command A(message, _UsersAccept[idx], _UsersAccept, _channels, _password);
 					}
 
 				}
