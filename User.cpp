@@ -92,7 +92,7 @@ int User::readMsg() {
 
 		// Wait for a message
 		int bytesRecv = recv(_socket, buf, 4096, 0);
-		if (bytesRecv > 0) {
+		if (bytesRecv >= 0) {
 			buf[bytesRecv] = 0;
 			msg += buf;
 			std::cout  << msg;
@@ -102,7 +102,7 @@ int User::readMsg() {
 				break;
 			}
 		}
-		if (bytesRecv <= 0) {
+		if (bytesRecv < 0) {
 			return (-1);
 		}
 	}

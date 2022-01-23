@@ -8,18 +8,20 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["PASS"] = &Command::cmdPass;
 	_command["NICK"] = &Command::cmdNick;
 	_command["USER"]= &Command::cmdUser;
-	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
-		if (msg.getCmd() == "PASS" && user->getfPass() == 0)
-			user->setfPass(1);
-		else if (msg.getCmd() == "NICK" && user->getfNick() == 0)
-			user->setfNick(1);
-		else if (msg.getCmd() == "USER" && user->getfUser() == 0)
-			user->setfUser(1);
-		user->setRegistered(1);
-		std::cout << "Registr: " << user->getRegistered() << std::endl;
-	}
-	else
-		throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
+	_command["PRIVMSG"]= &Command::PrivMsg;
+
+	// if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
+	// 	if (msg.getCmd() == "PASS" && user->getfPass() == 0)
+	// 		user->setfPass(1);
+	// 	else if (msg.getCmd() == "NICK" && user->getfNick() == 0)
+	// 		user->setfNick(1);
+	// 	else if (msg.getCmd() == "USER" && user->getfUser() == 0)
+	// 		user->setfUser(1);
+	// 	user->setRegistered(1);
+	// 	std::cout << "Registr: " << user->getRegistered() << std::endl;
+	// }
+	// else
+	// 	throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
 	if (_command.find(msg.getCmd()) == _command.end())
 		throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
 	(this->*(_command.at(msg.getCmd())))();
@@ -38,7 +40,7 @@ void Command::cmdPass()
 void Command::cmdUser()
 {
 	std::string realname = _msg.getTrailing();
-	if (_msg.getParams().size() != 3 || realname.length() == 1)
+	if (_msg.getParams().size() != 4 || realname.length() == 1)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	else if (_user->isAlreadyRegistered())
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ALREADYREGISTRED);
@@ -77,11 +79,11 @@ void Command::cmdNick()
 
 //chanel command
 
-void Command::PrintMsg()
+void Command::PrivMsg()
 {
 	std::vector<std::string> param = _msg.getParams();
 	std::vector<std::pair<std::string, bool> > userAndChanel;
-	std::string	messegeFromUser = _msg.getTrailing();
+	std::string	messegeFromUser = _msg.getTrailing() + "\n";
 	if (param.size() < 1)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	for (size_t i = 0; i < param.size(); ++i)
@@ -111,7 +113,7 @@ void Command::PrintMsg()
 		}
 		else if (userExist == false)
 		{
-			messegeFromUser = param[i];
+			messegeFromUser = param[i] + "\n";
 			break;
 		}
 	}
@@ -123,6 +125,7 @@ void Command::PrintMsg()
 			{
 				if (_users[j]->getNickName() == userAndChanel[i].first)
 				{
+					std::string returnMessage = ":" + _user->getNickName();
 					send(_users[j]->getSocket(), messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
 				}
 			}

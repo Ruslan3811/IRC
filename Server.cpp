@@ -83,7 +83,8 @@ void Server::acceptUsers() {
 		pfd.events = POLLIN;
 		pfd.revents = POLLERR;
 		_fdUsers.push_back(pfd);
-		_UsersAccept.push_back(new User(_clientSocket, host));
+		User *a = new User(_clientSocket, host);
+		_UsersAccept.push_back(a);
 	} 
 }
 
@@ -97,18 +98,26 @@ void Server::receivingMessages() {
 				int idx = it - _fdUsers.begin();
 				// читаем сообщение
 				if (_UsersAccept[idx]->readMsg() == -1)
+				{
 					_UsersAccept[idx]->setFlag(-1);
-				// парсим сбщ
+				}
+
 				try
 				{
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
-					Message message(*(--msg.end()));
-					Command A(message, _UsersAccept[idx], _UsersAccept, _channels);
+					if (msg.size() != 0)
+					{
+						Message message(*(--msg.end()));
+						Command A(message, _UsersAccept[idx], _UsersAccept, _channels);
+					}
+
 				}
 				catch (const std::exception & ex)
 				{
 					send(_UsersAccept[idx]->getSocket(), ex.what(), std::string(ex.what()).size(), IRC_NOSIGNAL);
 				}
+			
+
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
