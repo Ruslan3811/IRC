@@ -34,6 +34,11 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
     {
         _trailing += (*i) + " ";
     }
+    if (_trailing.length() > 0)
+    {
+        _trailing.erase(0, 1);
+        _trailing.erase(_trailing.length() - 1, 1);
+    }
     
     
     std::cout << "PREFIX: |" << _prefix << "|" << std::endl;
@@ -41,9 +46,9 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
     std::vector<std::string>::iterator ind = _parameters.begin();
     std::cout << "PARAMS: |";
     for(; ind != _parameters.end(); ++ind)
-        std::cout << *ind << "|" << " ";
+       std::cout << *ind << "|";
     std::cout << "\nTRAILING: |" << _trailing << "|" << std::endl;
-    
+    std::cout << "END" << std::endl;
     
     // std::cout << getCmd() << "\n" ;
     //Если понадобится вектор
@@ -51,8 +56,6 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
     // {
     //     _trailing.push_back(*i);
     // }
-
-    std::cout << "\nEND" << std::endl;
 
 }
 

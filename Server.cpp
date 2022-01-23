@@ -103,7 +103,7 @@ void Server::receivingMessages() {
 				{
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 					Message message(*(--msg.end()));
-					Command A(message, _UsersAccept[idx], _UsersAccept);
+					Command A(message, _UsersAccept[idx], _UsersAccept, _channels);
 				}
 				catch (const std::exception & ex)
 				{
