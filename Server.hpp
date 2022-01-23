@@ -18,6 +18,9 @@
 #include <fstream>
 #include <map>
 #include "Cmd.hpp"
+#include "User.hpp"
+#include "Message.hpp"
+#include "Exception.hpp"
 #include "Channel.hpp"
 #ifdef __APPLE__
 #define IRC_NOSIGNAL SO_NOSIGPIPE

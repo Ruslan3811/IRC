@@ -15,6 +15,9 @@ private:
     bool        _active;
 	int			_registered;
 	std::vector<std::string> _message;
+	int			_fNick;
+	int			_fUser;
+	int			_fPass;
 public:
     User(void);
     ~User(void);
@@ -39,6 +42,13 @@ public:
 	std::vector<std::string> getMessage() const;
     void setUserName(std::string username);
     void setUserRealName(std::string realname);
+
+	void setfNick(int flag);
+	int getfNick() const;
+	void setfUser(int flag);
+	int getfUser() const;
+	void setfPass(int flag);
+	int getfPass() const;
 
     std::string getRealName()const;
     std::string getNickName()const;

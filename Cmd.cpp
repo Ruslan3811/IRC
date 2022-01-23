@@ -8,8 +8,13 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["PASS"] = &Command::cmdPass;
 	_command["NICK"] = &Command::cmdNick;
 	_command["USER"]= &Command::cmdUser;
-	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER"))
-	{
+	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
+		if (msg.getCmd() == "PASS" && user->getfPass() == 0)
+			user->setfPass(1);
+		else if (msg.getCmd() == "NICK" && user->getfNick() == 0)
+			user->setfNick(1);
+		else if (msg.getCmd() == "USER" && user->getfUser() == 0)
+			user->setfUser(1);
 		user->setRegistered(1);
 		std::cout << "Registr: " << user->getRegistered() << std::endl;
 	}
