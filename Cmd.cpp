@@ -3,7 +3,7 @@
 
 
 Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels) 
-: _msg(msg), _user(user), _users(users), _channels(channels) {
+: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false) {
 
 	_command["PASS"] = &Command::cmdPass;
 	// _command["NICK"] = &Command::cmdNick;

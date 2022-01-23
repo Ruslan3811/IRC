@@ -2,6 +2,7 @@
 #include "Message.hpp"
 #include "Exception.hpp"
 #include "User.hpp"
+#include "Channel.hpp"
 #include <map>
 #include <vector>
 
@@ -20,7 +21,7 @@ class  Command
 		std::map<std::string, Cmd> _command;
         std::vector<Channel *> & _channels;
         std::pair<std::vector<std::string>, std::string> _response;
-        bool    commandGiveResponse = false;
+        bool    commandGiveResponse;
     public:
         Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels);
         void cmdPass(void);
