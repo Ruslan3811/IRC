@@ -5,7 +5,7 @@
 Command::Command(const Message & msg, User * user, std::vector<User *> & users) : _msg(msg), _user(user), _users(users) {
 
 	_command["PASS"] = &Command::cmdPass;
-	// _command["NICK"] = &Command::cmdNick;
+	_command["NICK"] = &Command::cmdNick;
 	_command["USER"]= &Command::cmdUser;
 	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
 		user->setRegistered(1);
@@ -24,24 +24,51 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users) 
 
 void Command::cmdPass()
 {
-	std::string password = _msg.getParams().front();
-    if (!_user->IsTrueLength(password))
+    if (!_msg.getParams().size())
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	else if (_user->isAlreadyRegistered())
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ALREADYREGISTRED);
-	_user->setPassword(password);
+	_user->setPassword(_msg.getParams().front());
 }
 
 void Command::cmdUser()
 {
 	std::string realname = _msg.getTrailing();
-
 	if (_msg.getParams().size() != 3 || realname.length() == 1)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	else if (_user->isAlreadyRegistered())
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ALREADYREGISTRED);
-	_user->setUserName(_msg.getParams()[0]);
+	_user->setUserName(_msg.getParams().front());
 	_user->setUserRealName(_msg.getTrailing().erase(0, 1));
+}
+
+void Command::cmdNick()
+{
+	if (_user->getNickName().length() > 0 && _msg.getPrefix().length() == 0)
+	{
+		std::cout << "You've already registered your name\n";
+		return ;
+	}
+	if (_msg.getParams().size() == 0)
+	{
+		if (_user->getNickName().length() == 0)
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NONICKNAMEGIVEN);
+	}
+	std::string nickname = _msg.getParams().front();
+	for (size_t c = 0;  c < _msg.getParams().front().length(); ++c)
+    {
+        if (nickname[c] != ' ' && (nickname[c] < '0' || nickname[c] > '9') && (nickname[c] < 'a' || nickname[c] > 'z') && (nickname[c] < 'A' || nickname[c] > 'Z'))
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ERRONEUSNICKNAME);
+	}
+
+	std::vector<User *>::iterator begin = _users.begin();
+	std::vector<User *>::iterator end = _users.end();
+	for (;begin != end; ++begin)
+	{
+		if (nickname == (*begin)->getNickName() && (*begin)->isActiveUser())
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NICKNAMEINUSE);
+	}
+	_user->setUserName(nickname);
 }
 
 //chanel command
@@ -50,71 +77,4 @@ void Command::cmdMode()
 	
 
 }
-//доделать изменение ника
-
-//нужна функция определяющая в сети пользователь или нет
-// int Server::cmdNick(Message &_msg, _user &_user)
-// {
-// //_msg->cmd и _msg->params - не распарсенные
-//     std::vector<_user *>::iterator begin = this->get_users().begin();
-// 	std::vector<_user *>::iterator end = this->get_users().end();
-//     std::string nickname = "";
-//     if (_msg.getParams().size())
-//     {
-//         if (_user.getNickName().length() > 0)
-//         { 
-//             std::cout << "this _user already has got nickname";
-//             return (0);
-//         }
-//         for (;begin != end;++begin)
-//         {
-//             // std::cout << _msg.getParams().front();
-//             if (_msg.getParams().front() == (*begin)->getNickName() && (*begin)->isActive_user())
-//             {
-//                 std::cout << "ERR_NICKNAMEINUSE" << std::endl;
-//                 return (0);
-//                 // return sendErr(_msg, _user,  ERR_NICKNAMEINUSE);
-//             }
-//         }
-//         nickname = _msg.getParams().front();
-//     }
-//     else if (_msg.getTrailing().length() == 0 && _msg.getParams().front().length() == 0)
-//     {
-//         std::cout << "ERR_NONICKNAMEGIVEN" << std::endl;
-//         return (0);
-//     }
-
-
-//     for (size_t c = 0;  c < nickname.length(); ++c)
-//     {
-//         if (nickname[c] != ' ' && (nickname[c] < '0' || nickname[c] > '9') && (nickname[c] < 'a' || nickname[c] > 'z') && (nickname[c] < 'A' || nickname[c] > 'Z'))
-//         {
-//             std::cout << "ERR_ERRONEUSNICKNAME" << std::endl;
-//             return (0);
-//             // return sendErr(_msg, _user, ERR_ERRONEUSNICKNAME);
-//         }    
-//     }
-
-//     std::string trailing = _msg.getTrailing();
-    
-//     if (_msg.getTrailing().length() > 0 && nickname.length() == 0)
-//     {
-//         trailing.erase(0, 1);
-//         std::string old_nick = trailing.substr(0, trailing.find(" "));
-//         trailing.erase(0, trailing.find(" "));
-//         int i = 0;
-//         for (; trailing[i] == ' '; ++i){}
-//         trailing.erase(0, i);
-//         i = 0;
-//         for (; trailing[i] != ' ' && trailing[i]; ++i){}
-//         std::string nick = trailing.substr(0, i);
-//         trailing.erase(0, i);
-//         i = 0;
-//         for (; trailing[i] == ' '; ++i){}
-//         trailing.erase(0, i);
-//         nickname = trailing;    
-//     }
-//     _user.set_userName(nickname);
-// 	return (0);
-// }
 
