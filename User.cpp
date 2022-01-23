@@ -1,13 +1,11 @@
 #include "Server.hpp"
 
 User::User(int socket, std::string host) 
-: _socket(socket), _host(host), _username(""), _password(""), _realname("")
+: _socket(socket), _host(host), _password(""), _nickname(""), _username(""),_hostname(""), _servername(""), _realname("")
 {
 	_flag = 0;
-	_registered = 0;
-	_fNick = 0;
-	_fUser = 0;
-	_fPass = 0;
+	// _registered = 0;
+	_registered = false;
 }
 
 User::User(void): _flag(0){}
@@ -23,6 +21,8 @@ void User::setUserName(std::string username)
 {
     _username = username;
 }
+
+void User::setNickName(std::string nickname) { _nickname = nickname; }
 
 void User::setSocket(int sock)
 {
@@ -68,8 +68,10 @@ std::string User::getRealName()const
 
 std::string User::getNickName()const
 {
-	return _username;
+	return _nickname;
 }
+
+std::string User::getUserName()const { return _username; }
 
 bool User::isActiveUser()const
 {
@@ -112,19 +114,10 @@ int User::readMsg() {
 
 std::vector<std::string> User::getMessage() const { return _message; }
 
-int User::getRegistered() const { return _registered; }
+// int User::getRegistered() const { return _registered; }
+// void User::setRegistered(int registered) { _registered += registered; }
+bool User::getRegistered() const { return _registered; }
+void User::setRegistered(bool registered) { _registered = registered; }
 
-void User::setRegistered(int registered) { _registered += registered; }
 
-
-void User::setfNick(int flag) { _fNick += flag; }
-
-int User::getfNick() const { return _fNick; }
-
-void User::setfUser(int flag) { _fUser += flag; }
-
-int User::getfUser() const { return _fUser; }
-
-void User::setfPass(int flag) { _fPass += flag; }
-
-int User::getfPass() const { return _fPass; }
+std::string User::getPassword()const { return _password; }
