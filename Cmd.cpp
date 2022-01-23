@@ -3,15 +3,20 @@
 
 
 Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels) 
-: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false) {
-
+: _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false) 
+{
 	_command["PASS"] = &Command::cmdPass;
 	// _command["NICK"] = &Command::cmdNick;
 	_command["USER"]= &Command::cmdUser;
-	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER")) {
+	if (user->getRegistered() < 3 && (msg.getCmd() == "PASS" || msg.getCmd() == "NICK" || msg.getCmd() == "USER"))
+	{
 		user->setRegistered(1);
 		std::cout << "Registr: " << user->getRegistered() << std::endl;
 	}
+	else
+		throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
+	if (_command.find(msg.getCmd()) == _command.end())
+		throw  errorRequest(_msg.getCmd(), _user->getNickName(), ERR_UNKNOWNCOMMAND);
 	(this->*(_command.at(msg.getCmd())))();
 	
 }
@@ -97,6 +102,7 @@ std::pair<std::vector<std::string>, std::string> Command::getResponseForComand()
 {
 	return _response;
 }
+
 
 void Command::cmdMode()
 {

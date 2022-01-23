@@ -18,7 +18,11 @@ std::string errorRequest::_getErrorMessage(int codeError)
 		case ERR_NICKCOLLISION:
 			return _user + " :Nickname is already in use\n";
 		case ERR_NOSUCHNICK:
-			return _msg + " :No such nick/channel";
+			return _msg + " :No such nick/channel\n";
+		case ERR_UNKNOWNCOMMAND:
+			return _msg + " :Unknown command\n";
+		case ERR_NOTREGISTERED:
+			return ":You have not registered\n";
 	}
-	return "type error not found";
+	return "type error not found\n";
 }
