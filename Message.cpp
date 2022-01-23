@@ -19,7 +19,8 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
         _prefix = vec.front();
         ++i;
     }
-    
+    _prefix.erase(0, 1);
+
     for (; i != vec.end(); ++i)
     {
         if ((*i)[0] == ':')
@@ -90,4 +91,9 @@ void Message::setCmd(std::string cmd)
 std::string &Message::getTrailing()
 {
     return _trailing;
+}
+
+std::string &Message::getPrefix()
+{
+    return _prefix;
 }
