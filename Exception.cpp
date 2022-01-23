@@ -10,7 +10,7 @@ std::string errorRequest::_getErrorMessage(int codeError)
 		case ERR_ALREADYREGISTRED:
 			return _msg + " :Not enough parameters\n";
 		case ERR_NONICKNAMEGIVEN:
-			return ":No nickname given\n";
+			return " :No nickname given\n";
 		case ERR_ERRONEUSNICKNAME:
 			return _user + " :Erroneus nickname\n";
 		case ERR_NICKNAMEINUSE:

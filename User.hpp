@@ -40,6 +40,7 @@ public:
     void setUserName(std::string username);
     void setUserRealName(std::string realname);
 
+    std::string getRealName()const;
     std::string getNickName()const;
     bool isActiveUser()const;
     void setActiveUser(bool active);

@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <fstream>
 #include <map>
-#include "cmd.hpp"
+#include "Cmd.hpp"
 #include "Channel.hpp"
 #ifdef __APPLE__
 #define IRC_NOSIGNAL SO_NOSIGPIPE
