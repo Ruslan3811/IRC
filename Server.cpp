@@ -84,6 +84,7 @@ void Server::acceptUsers() {
 		pfd.revents = POLLERR;
 		_fdUsers.push_back(pfd);
 		_UsersAccept.push_back(new User(_clientSocket, host));
+		std::cout << "asdfghgfdsas\n";
 	} 
 }
 
@@ -119,18 +120,3 @@ std::vector<User *> Server::getUsers()const
 {
 	return _UsersAccept;
 }
-
-// Message Server::parseMsg(const int idx)
-// {
-// 	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
-// 	std::vector<std::string>::iterator it = msg.end();
-// 	it--;
-// 	Message message(*it);
-// 	return message;
-// }
-
-
-// if (_UsersAccept[idx]->getRegistered() < 3 && (message.getCmd() == "PASS" || message.getCmd() == "NICK" || message.getCmd() == "USER")) {
-// 		_UsersAccept[idx]->setRegistered(1);
-// 		std::cout << "Registr: " << _UsersAccept[idx]->getRegistered() << std::endl;
-// 	}

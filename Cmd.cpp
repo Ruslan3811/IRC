@@ -38,7 +38,7 @@ void Command::cmdPass()
 void Command::cmdUser()
 {
 	std::string realname = _msg.getTrailing();
-	if (_msg.getParams().size() != 3 || realname.length() == 1)
+	if (_msg.getParams().size() != 4 || realname.length() == 1)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	else if (_user->isAlreadyRegistered())
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_ALREADYREGISTRED);
