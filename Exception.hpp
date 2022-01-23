@@ -8,6 +8,10 @@ class errorRequest : public std::exception
     std::string _user;
     std::string _errorMessege;
     public:
+    errorRequest(const std::string & msg, int codeError) : _msg(msg), _user(msg)
+    {
+        _errorMessege = _getErrorMessage(codeError);
+    }
     errorRequest(const std::string & msg, const std::string & user, int codeError) : _msg(msg),  _user(user)
     {
         _errorMessege = _getErrorMessage(codeError);

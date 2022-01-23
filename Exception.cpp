@@ -23,6 +23,8 @@ std::string errorRequest::_getErrorMessage(int codeError)
 			return _msg + " :Unknown command\n";
 		case ERR_NOTREGISTERED:
 			return ":You have not registered\n";
+		case ERR_NOSUCHCHANNEL:
+			return _msg + ":No such channel\n";
 	}
 	return "type error not found\n";
 }

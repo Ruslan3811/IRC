@@ -133,13 +133,86 @@ void Command::PrivMsg()
 	}
 }
 
-std::pair<std::vector<std::string>, std::string> Command::getResponseForComand() const
+void Command::joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass)
 {
-	return _response;
+
+	if (channelName[0] == '&')
+	{
+		channel->pushUserInChannel(_user->getNickName());
+	}
+	else if (channelName[0] == '#')
+	{
+
+		if (passVec.size() == iterPass)
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+		if (passVec[iterPass] == channel->getPass())
+			channel->pushUserInChannel(_user->getNickName());
+	}
 }
 
 
+
+void Command::cmdJoin()
+{
+	std::vector<std::string> param = _msg.getParams();
+	if (param.size() < 1)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	std::vector<std::string> channelsJoin = split(param[0], ",");
+	std::vector<std::string> channelPass;
+	size_t iterPass = 0;
+	if (param.size() == 2)
+		channelPass = split(param[1], ",");
+	for (size_t j = 0; j < channelsJoin.size(); ++j)
+	{
+		size_t i = 0;
+		for (; i < _channels.size(); ++i)
+		{
+			if (_channels[i]->getChannelName() == channelsJoin[j].substr(1))
+			{
+				joinToChannel_(channelsJoin[j], _channels[i], channelPass, iterPass); // JOIN IN CHANNEL
+				break;
+			}
+		}
+		if (i == _channels.size() && channelsJoin[j][0] != '&' && channelsJoin[j][0] != '#') // PRINT ERROR MESSEGE
+		{
+			errorRequest err(_channels[j]->getChannelName(), ERR_NOSUCHCHANNEL);
+			send(_user->getSocket(), err.what(), std::string(err.what()).size(), IRC_NOSIGNAL);
+		}
+		else if (i == _channels.size()) // CREATE CHANNEL 
+		{
+			std::string _pass = "";
+			if (channelsJoin[j][i] == '#')
+			{
+				_pass = channelPass[iterPass];
+				++iterPass;
+			}
+			Channel * A = new Channel(channelsJoin[j], _pass);
+			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
+			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
+			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
+			_channels.push_back(A);
+		}
+	}
+}
+
+void Command::responseForCommand_(const std::string & msg, int numResponse) const
+{
+	std::string messege;
+	switch (numResponse)
+	{
+		case RPL_NOTOPIC:
+			messege = msg + " :No topic is set";
+			break;
+		case RPL_NAMREPLY:
+			messege = msg + " :[[@|+]<nick> [[@|+]<nick> [...]]]"; // fix
+			break;
+		case RPL_ENDOFNAMES:
+			messege = msg + " :End of /NAMES list"; // fix
+			break;
+	}
+	send(_user->getSocket(), messege.c_str(), messege.size(), IRC_NOSIGNAL);
+}
 void Command::cmdMode()
 {
-	
+
 }

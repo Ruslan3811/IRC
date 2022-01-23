@@ -10,7 +10,7 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
 
 	std::vector<std::string> vec;
     
-	vec = split(str);
+	vec = split(str, " ");
 
     std::vector<std::string>::iterator i = vec.begin();
 

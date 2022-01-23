@@ -10,6 +10,14 @@ class Message;
 class User;
 class Command;
 
+enum
+{
+    RPL_NOTOPIC = 331, //       "<channel> :No topic is set"
+    RPL_NAMREPLY = 353, //      "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
+    RPL_ENDOFNAMES = 366, //    "<channel> :End of /NAMES list"
+
+};
+
 typedef void (Command::*Cmd) (void);
 
 class  Command
@@ -29,5 +37,11 @@ class  Command
 	    void cmdNick(void);
         void PrivMsg(void);
         void cmdMode(void);
-        std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
+        void cmdJoin(void);
+
+
+    private:
+        void responseForCommand_(const std::string & msg, int numResponse) const;
+        void createChannel_();
+        void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
 };
