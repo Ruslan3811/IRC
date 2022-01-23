@@ -21,6 +21,12 @@
 #include "User.hpp"
 #include "Message.hpp"
 #include "Exception.hpp"
+#include "Channel.hpp"
+#ifdef __APPLE__
+#define IRC_NOSIGNAL SO_NOSIGPIPE
+#else
+#define IRC_NOSIGNAL MSG_NOSIGNAL
+#endif
 
 class User;
 class Server;
@@ -35,6 +41,7 @@ private:
 	sockaddr_in			_sockaddr;
 	std::vector<pollfd>	_fdUsers;
 	std::vector<User *>	_UsersAccept;
+	std::vector<Channel *> _channels;
 	std::string			_serverName;
 	std::string 		_hostname;
 	int					_clientSocket;

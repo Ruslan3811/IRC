@@ -1,6 +1,8 @@
 #include "Server.hpp"
 
-User::User(int socket, std::string host): _socket(socket), _host(host){
+User::User(int socket, std::string host) 
+: _socket(socket), _host(host), _username(""), _password(""), _realname("")
+{
 	_flag = 0;
 	_registered = 0;
 	_fNick = 0;
