@@ -120,15 +120,3 @@ void Command::PrintMsg()
 	}
 }
 
-<<<<<<< HEAD
-=======
-std::pair<std::vector<std::string>, std::string> Command::getResponseForComand() const
-{
-	return _response;
-}
-
-void Command::cmdMode()
-{
-	
-}
->>>>>>> main
