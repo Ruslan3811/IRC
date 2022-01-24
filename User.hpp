@@ -16,8 +16,7 @@ private:
     std::string _realname;
     int         _flag;
     bool        _active;
-	// int			_registered;
-	bool			_registered;
+	bool		_registered;
 	std::vector<std::string> _message;
 	int			_fNick;
 	int			_fUser;
@@ -41,19 +40,20 @@ public:
 
     // Alena
     int readMsg();
-	// int getRegistered() const;
+
 	bool getRegistered() const;
-	void setRegistered(bool registered);
+    std::string getRealName()const;
+    std::string getPassword()const;
+    std::string getNickName()const;
+    std::string getUserName()const;
 	std::vector<std::string> getMessage() const;
+
+	void setRegistered(bool registered);
     void setUserName(std::string username);
     void setNickName(std::string nickname);
     void setUserRealName(std::string realname);
 
 
-    std::string getRealName()const;
-    std::string getPassword()const;
-    std::string getNickName()const;
-    std::string getUserName()const;
     bool isActiveUser()const;
     void setActiveUser(bool active);
 };

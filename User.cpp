@@ -4,7 +4,6 @@ User::User(int socket, std::string host)
 : _socket(socket), _host(host), _password(""), _nickname(""), _username(""),_hostname(""), _servername(""), _realname("")
 {
 	_flag = 0;
-	// _registered = 0;
 	_registered = false;
 }
 
@@ -114,8 +113,6 @@ int User::readMsg() {
 
 std::vector<std::string> User::getMessage() const { return _message; }
 
-// int User::getRegistered() const { return _registered; }
-// void User::setRegistered(int registered) { _registered += registered; }
 bool User::getRegistered() const { return _registered; }
 void User::setRegistered(bool registered) { _registered = registered; }
 

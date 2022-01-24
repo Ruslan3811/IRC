@@ -7,8 +7,9 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 {
 	_command["PASS"] = &Command::cmdPass;
 	_command["NICK"] = &Command::cmdNick;
-	_command["USER"]= &Command::cmdUser;
-	_command["PRIVMSG"]= &Command::PrivMsg;
+	_command["USER"] = &Command::cmdUser;
+	_command["PRIVMSG"] = &Command::PrivMsg;
+	_command["JOIN"] = &Command::cmdJoin;
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
 		throw errorRequest(_msg.getCmd(), user->getNickName(), ERR_NOTREGISTERED);
@@ -23,6 +24,7 @@ void Command::checkConnection() {
 		if (_servPass.size() == 0 || _user->getPassword() == _servPass) {
 			if (_user->getRegistered() == false) {
 				_user->setRegistered(true);
+				send(_user->getSocket(), "Registration complete!\n", 24, 0);
 				// sendMOTD(_user);
 			}
 		}

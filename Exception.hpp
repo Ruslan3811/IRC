@@ -1,6 +1,7 @@
 #pragma once
 #include <exception>
 #include <string>
+
 class errorRequest : public std::exception
 {
     private:
