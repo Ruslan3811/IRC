@@ -29,5 +29,7 @@ class  Command
 	    void cmdNick(void);
         void PrivMsg(void);
         void cmdMode(void);
+        void cmdNotice(void);
+        void cmdAway(void);
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
 };

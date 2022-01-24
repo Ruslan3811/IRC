@@ -18,6 +18,7 @@ private:
 	int			_fNick;
 	int			_fUser;
 	int			_fPass;
+    std::string _away_msg;
 public:
     User(void);
     ~User(void);
@@ -54,4 +55,7 @@ public:
     std::string getNickName()const;
     bool isActiveUser()const;
     void setActiveUser(bool active);
+
+    void nullify_flag();
+    void setAwayMsg(std::string msg);
 };

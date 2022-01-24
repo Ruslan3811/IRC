@@ -128,3 +128,14 @@ int User::getfUser() const { return _fUser; }
 void User::setfPass(int flag) { _fPass += flag; }
 
 int User::getfPass() const { return _fPass; }
+
+
+void User::nullify_flag()
+{
+
+}
+
+ void User::setAwayMsg(std::string msg)
+ {
+	_away_msg = msg;
+ }

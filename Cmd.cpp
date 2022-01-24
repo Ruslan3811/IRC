@@ -143,3 +143,31 @@ void Command::cmdMode()
 {
 	
 }
+
+void Command::cmdAway()
+{
+	if (_msg.getParams().size() > 0)
+	{
+		_user->setflag();
+		_user->setAwayMsg(_msg.getParams()[0]);
+		responseForCommand_("", RPL_NOWAWAY);
+		return ;
+	}
+	_user->nullify_flag();
+	responseForCommand_("", RPL_UNAWAY);
+	return;
+}
+
+// 305     RPL_UNAWAY                  ":You are no longer marked as being away"
+// 306     RPL_NOWAWAY                 ":You have been marked as being away"
+
+// void Command::cmdNotice()
+// {
+// 	std::vector<User *>::iterator begin = _users.begin();
+// 	std::vector<User *>::iterator end = _users.end();
+// 	for (;begin != end; ++begin)
+// 	{
+// 		if (_msg.getParams().front().length() > 0 && (*begin)->getNickName() == _msg.getParams().front()) //&& (*begin)->flag != "+s"
+// 			PrivMsg();
+// 	}
+// }
