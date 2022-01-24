@@ -8,12 +8,15 @@ class User
 private:
     int         _socket;
     std::string _host;
-    std::string _username;
-    int         _flag;
     std::string _password;
+    std::string _nickname;
+    std::string _username;
+    std::string _hostname;
+    std::string _servername;
     std::string _realname;
+    int         _flag;
     bool        _active;
-	int			_registered;
+	bool		_registered;
 	std::vector<std::string> _message;
 	int			_fNick;
 	int			_fUser;
@@ -38,24 +41,24 @@ public:
 
     // Alena
     int readMsg();
-	int getRegistered() const;
-	void setRegistered(int registered);
+
+	bool getRegistered() const;
+    std::string getRealName()const;
+    std::string getPassword()const;
+    std::string getNickName()const;
+    std::string getUserName()const;
 	std::vector<std::string> getMessage() const;
+
+	void setRegistered(bool registered);
     void setUserName(std::string username);
+    void setNickName(std::string nickname);
     void setUserRealName(std::string realname);
 
-	void setfNick(int flag);
-	int getfNick() const;
-	void setfUser(int flag);
-	int getfUser() const;
-	void setfPass(int flag);
-	int getfPass() const;
 
-    std::string getRealName()const;
-    std::string getNickName()const;
     bool isActiveUser()const;
     void setActiveUser(bool active);
 
     void nullify_flag();
     void setAwayMsg(std::string msg);
+    int getfPass() const;
 };

@@ -108,7 +108,7 @@ void Server::receivingMessages() {
 					if (msg.size() != 0)
 					{
 						Message message(*(--msg.end()));
-						Command A(message, _UsersAccept[idx], _UsersAccept, _channels);
+						Command A(message, _UsersAccept[idx], _UsersAccept, _channels, _password);
 					}
 
 				}
@@ -128,18 +128,3 @@ std::vector<User *> Server::getUsers()const
 {
 	return _UsersAccept;
 }
-
-// Message Server::parseMsg(const int idx)
-// {
-// 	std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
-// 	std::vector<std::string>::iterator it = msg.end();
-// 	it--;
-// 	Message message(*it);
-// 	return message;
-// }
-
-
-// if (_UsersAccept[idx]->getRegistered() < 3 && (message.getCmd() == "PASS" || message.getCmd() == "NICK" || message.getCmd() == "USER")) {
-// 		_UsersAccept[idx]->setRegistered(1);
-// 		std::cout << "Registr: " << _UsersAccept[idx]->getRegistered() << std::endl;
-// 	}
