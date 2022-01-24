@@ -21,6 +21,8 @@ private:
 	int			_fNick;
 	int			_fUser;
 	int			_fPass;
+    std::string _away_status;
+    int         _awayflag;
 public:
     User(void);
     ~User(void);
@@ -56,4 +58,11 @@ public:
 
     bool isActiveUser()const;
     void setActiveUser(bool active);
+
+    void setAwayStatus(std::string msg);
+    std::string getAwayStatus()const;
+    int getfPass() const;
+
+    void setAwayFlag(int nbr);
+    int getAwayFlag()const;
 };

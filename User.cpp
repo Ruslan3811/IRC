@@ -117,4 +117,27 @@ bool User::getRegistered() const { return _registered; }
 void User::setRegistered(bool registered) { _registered = registered; }
 
 
+int User::getfPass() const { return _fPass; }
+
+ void User::setAwayFlag(int nbr)
+{
+	_awayflag = nbr;
+}
+
+int User::getAwayFlag()const
+{
+	return _awayflag;
+}
+
+std::string User::getAwayStatus()const
+{
+	return _away_status;
+}
+
+
+ void User::setAwayStatus(std::string msg)
+ {
+	_away_status = msg;
+ }
+
 std::string User::getPassword()const { return _password; }

@@ -275,10 +275,31 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 		case RPL_ENDOFNAMES:
 			messege = msg + " :End of /NAMES list\n"; // fix
 			break;
+		case RPL_NOWAWAY:
+			messege = msg + " :You have been marked as being away";
+			break;
+		case RPL_UNAWAY:
+			messege = msg + " :You are no longer marked as being away";
+			break;
 	}
 	send(_user->getSocket(), messege.c_str(), messege.size(), IRC_NOSIGNAL);
 }
-void Command::cmdMode()
-{
 
+void Command::cmdAway()
+{
+	if (_msg.getParams().size() > 0)
+	{
+		_user->setAwayFlag(1);
+		_user->setAwayStatus(_msg.getParams()[0]);
+		responseForCommand_("", RPL_NOWAWAY);
+		return ;
+	}
+	_user->setAwayFlag(0);
+	responseForCommand_("", RPL_UNAWAY);
+	return;
+}
+
+void Command::cmdNotice()
+{
+	PrivMsg();
 }

@@ -12,10 +12,12 @@ class Command;
 
 enum
 {
+    RPL_UNAWAY = 305,
+    RPL_NOWAWAY = 306,
+    
     RPL_NOTOPIC = 331, //       "<channel> :No topic is set"
     RPL_NAMREPLY = 353, //      "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
     RPL_ENDOFNAMES = 366, //    "<channel> :End of /NAMES list"
-
 };
 
 typedef void (Command::*Cmd) (void);
@@ -40,6 +42,9 @@ class  Command
 	    void cmdNick(void);
         void PrivMsg(void);
         void cmdMode(void);
+        void cmdNotice(void);
+        void cmdAway(void);
+        std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
 
 
