@@ -12,10 +12,12 @@ class Command;
 
 enum
 {
+    RPL_UNAWAY = 305,
+    RPL_NOWAWAY = 306,
+    
     RPL_NOTOPIC = 331, //       "<channel> :No topic is set"
     RPL_NAMREPLY = 353, //      "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
     RPL_ENDOFNAMES = 366, //    "<channel> :End of /NAMES list"
-
 };
 
 typedef void (Command::*Cmd) (void);

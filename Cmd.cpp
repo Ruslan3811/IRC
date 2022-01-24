@@ -217,38 +217,31 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 		case RPL_ENDOFNAMES:
 			messege = msg + " :End of /NAMES list"; // fix
 			break;
+		case RPL_NOWAWAY:
+			messege = msg + " :You have been marked as being away";
+			break;
+		case RPL_UNAWAY:
+			messege = msg + " :You are no longer marked as being away";
+			break;
 	}
 	send(_user->getSocket(), messege.c_str(), messege.size(), IRC_NOSIGNAL);
 }
-void Command::cmdMode()
-{
 
+void Command::cmdAway()
+{
+	if (_msg.getParams().size() > 0)
+	{
+		_user->setAwayFlag(1);
+		_user->setAwayStatus(_msg.getParams()[0]);
+		responseForCommand_("", RPL_NOWAWAY);
+		return ;
+	}
+	_user->setAwayFlag(0);
+	responseForCommand_("", RPL_UNAWAY);
+	return;
 }
 
-// void Command::cmdAway()
-// {
-// 	if (_msg.getParams().size() > 0)
-// 	{
-// 		_user->setflag();
-// 		_user->setAwayMsg(_msg.getParams()[0]);
-// 		responseForCommand_("", RPL_NOWAWAY);
-// 		return ;
-// 	}
-// 	_user->nullify_flag();
-// 	responseForCommand_("", RPL_UNAWAY);
-// 	return;
-// }
-
-// 305     RPL_UNAWAY                  ":You are no longer marked as being away"
-// 306     RPL_NOWAWAY                 ":You have been marked as being away"
-
-// void Command::cmdNotice()
-// {
-// 	std::vector<User *>::iterator begin = _users.begin();
-// 	std::vector<User *>::iterator end = _users.end();
-// 	for (;begin != end; ++begin)
-// 	{
-// 		if (_msg.getParams().front().length() > 0 && (*begin)->getNickName() == _msg.getParams().front()) //&& (*begin)->flag != "+s"
-// 			PrivMsg();
-// 	}
-// }
+void Command::cmdNotice()
+{
+	PrivMsg();
+}
