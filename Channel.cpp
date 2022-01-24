@@ -7,11 +7,15 @@ Channel::Channel(const std::string & channelName) : _channelName(channelName)
     
 }
 
-Channel::Channel(const std::string & channelName, const std::string & channelPass) : _channelName(channelName), _pass(channelPass) {}
+Channel::Channel(const std::string & channelName, const std::string & channelPass,const std::string & userName) 
+: _channelName(channelName), _pass(channelPass), _userHostNick(userName), _onlyInvaite(false), _hasPass(false) {}
 
 Channel::~Channel() {}
 
 // Getters
+bool                    Channel::getHasPass() const {return _hasPass; }
+
+bool                    Channel::getOnlyInvaite() const {return _onlyInvaite; };
 
 std::string Channel::getChannelName() const { return _channelName; }
 
@@ -23,10 +27,12 @@ std::vector<std::string> &Channel::getBanListVec() { return _banListVec; }
 
 std::vector<std::string> &Channel::getInviteListVec() { return _inviteListVec; }
 
-std::vector<std::string> &Channel::getUserInChannel() { return _usersVec; }
+std::vector<std::pair<std::string, int > > &Channel::getUserInChannel() { return _usersVec; }
 
 // Setters
 
+void                    Channel::setOnlyInvaite(bool b) { _hasPass = b; }
+void                    Channel::setHasPass(bool b) { _hasPass = b; }
 void	Channel::setChannelName(const std::string & channelName) { _channelName = channelName; }
 
 void	Channel::setCountUser(const std::size_t & countUser) { _countUser = countUser; }
@@ -37,4 +43,4 @@ void	Channel::pushBanListVec(const std::string & nickname) { _banListVec.push_ba
 
 void	Channel::pushInviteListVec(const std::string & nickname) { _inviteListVec.push_back(nickname); }
 
-void	Channel::pushUserInChannel(const std::string & nickName) { _usersVec.push_back(nickName); }
+void	Channel::pushUserInChannel(const std::string & nickName, int soket) { _usersVec.push_back(std::make_pair(nickName, soket)); }

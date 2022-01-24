@@ -1,6 +1,20 @@
 #include "Server.hpp"
 #include "Cmd.hpp"
 
+void printNum()
+{
+	static int i = 0;
+	std::cout << ++i << std::endl;
+}
+
+void printVectorStr(std::vector<std::string> & vec)
+{
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		std::cout << vec[i] << " ";
+	}
+	std::cout << std::endl;
+}
 
 Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels, std::string servPass) 
 : _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false), _servPass(servPass)
@@ -87,6 +101,19 @@ void Command::cmdNick()
 
 //chanel command
 
+// const unsigned FNV_32_PRIME = 0x01000193;
+// const unsigned HVAL_START = 0x811c9dc5;
+
+// unsigned int __hashFile(char * buff, unsigned int hval)
+// {
+// 	while (*buff)
+// 	{
+// 		hval ^= (unsigned int)*buff++;
+// 		hval *= FNV_32_PRIME;
+// 	}
+// 	return hval;
+// }
+
 void Command::PrivMsg()
 {
 	std::vector<std::string> param = _msg.getParams();
@@ -106,6 +133,8 @@ void Command::PrivMsg()
 				break;
 			}
 		}
+		if (userExist)
+			continue;
 		for (size_t j = 0; j < _channels.size(); ++j)
 		{
 			if (_channels[j]->getChannelName() == param[i])
@@ -115,6 +144,8 @@ void Command::PrivMsg()
 				break;
 			}
 		}
+		if (userExist)
+			continue;
 		if (userExist == false && i == 0)
 		{
 			throw errorRequest(param[i], _user->getNickName(), ERR_NOSUCHNICK);
@@ -135,6 +166,29 @@ void Command::PrivMsg()
 				{
 					std::string returnMessage = ":" + _user->getNickName();
 					send(_users[j]->getSocket(), messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
+					break;
+				}
+			}
+		}
+		if (userAndChanel[i].second == false)
+		{
+			for (size_t j = 0; j < _channels.size(); ++j)
+			{
+				if (userAndChanel[i].first == _channels[j]->getChannelName())
+				{
+					printNum();
+					std::vector<std::pair <std::string, int> > vecUserInChannel = _channels[j]->getUserInChannel();
+					if (find(vecUserInChannel.begin(), vecUserInChannel.end(), std::make_pair(_user->getNickName(), _user->getSocket()))
+					 != vecUserInChannel.end())
+					{
+						for (size_t k = 0; k < vecUserInChannel.size(); ++k)
+						{
+							if (_user->getSocket() == vecUserInChannel[k].second)
+								continue;
+							std::string returnMessage = ":" + _user->getNickName();
+							send(vecUserInChannel[k].second, messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
+						}
+					}
 				}
 			}
 		}
@@ -146,7 +200,7 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 
 	if (channelName[0] == '&')
 	{
-		channel->pushUserInChannel(_user->getNickName());
+		channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
 	else if (channelName[0] == '#')
 	{
@@ -154,7 +208,7 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 		if (passVec.size() == iterPass)
 			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 		if (passVec[iterPass] == channel->getPass())
-			channel->pushUserInChannel(_user->getNickName());
+			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
 }
 
@@ -182,8 +236,9 @@ void Command::cmdJoin()
 			}
 		}
 		if (i == _channels.size() && channelsJoin[j][0] != '&' && channelsJoin[j][0] != '#') // PRINT ERROR MESSEGE
-		{
-			errorRequest err(_channels[j]->getChannelName(), ERR_NOSUCHCHANNEL);
+		{	
+
+			errorRequest err(channelsJoin[j], ERR_NOSUCHCHANNEL);
 			send(_user->getSocket(), err.what(), std::string(err.what()).size(), IRC_NOSIGNAL);
 		}
 		else if (i == _channels.size()) // CREATE CHANNEL 
@@ -191,10 +246,13 @@ void Command::cmdJoin()
 			std::string _pass = "";
 			if (channelsJoin[j][i] == '#')
 			{
+				if (iterPass >= channelPass.size())
+					 throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 				_pass = channelPass[iterPass];
 				++iterPass;
 			}
-			Channel * A = new Channel(channelsJoin[j], _pass);
+			Channel * A = new Channel(channelsJoin[j].substr(1), _pass, _user->getNickName());
+			A->pushUserInChannel(_user->getNickName(), _user->getSocket());
 			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
 			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
 			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
@@ -209,13 +267,13 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 	switch (numResponse)
 	{
 		case RPL_NOTOPIC:
-			messege = msg + " :No topic is set";
+			messege = msg + " :No topic is set\n";
 			break;
 		case RPL_NAMREPLY:
-			messege = msg + " :[[@|+]<nick> [[@|+]<nick> [...]]]"; // fix
+			messege = msg + " :[[@|+]<nick> [[@|+]<nick> [...]]]\n"; // fix
 			break;
 		case RPL_ENDOFNAMES:
-			messege = msg + " :End of /NAMES list"; // fix
+			messege = msg + " :End of /NAMES list\n"; // fix
 			break;
 	}
 	send(_user->getSocket(), messege.c_str(), messege.size(), IRC_NOSIGNAL);

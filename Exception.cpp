@@ -93,6 +93,8 @@ std::string errorRequest::_getErrorMessage(int codeError)
 			return ":Unknown MODE flag\n";
 		case ERR_USERSDONTMATCH:
 			return ":Cant change mode for other users\n";
+		default:
+			return "type error not found\n";
 	}
 	return "type error not found\n";
 }
