@@ -42,15 +42,16 @@ public:
     void                    setOnlyInvaite(bool);
     void                    setHasPass(bool);
     void                    setTopicChannel(const std::string & topic);
-    void    setBanMask(const std::string & banMask);
-    void    setModerChannel(bool);
-    void    setSecretChannel(bool);
-    void    setPrivateChannel(bool);
-    void    setHostName(const std::string & name);
-	void	setChannelName(const std::string & channelName);
-	void	setCountUser(std::size_t countUser);
-	void	setPass(const std::string & pass);
-    void	pushBanListVec(const std::string & nickname);
-	void	pushInviteListVec(const std::string & nickname);
-    void	pushUserInChannel(const std::string & nickName, int soket);
+    void                    setBanMask(const std::string & banMask);
+    void                    setModerChannel(bool);
+    void                    setSecretChannel(bool);
+    void                    setPrivateChannel(bool);
+    void                    setHostName(const std::string & name);
+	void	                setChannelName(const std::string & channelName);
+	void	                setCountUser(std::size_t countUser);
+	void	                setPass(const std::string & pass);
+    void	                pushBanListVec(const std::string & nickname);
+	void	                pushInviteListVec(const std::string & nickname);
+    void	                pushUserInChannel(const std::string & nickName, int soket);
+
 };

@@ -44,3 +44,33 @@ void	Channel::pushBanListVec(const std::string & nickname) { _banListVec.push_ba
 void	Channel::pushInviteListVec(const std::string & nickname) { _inviteListVec.push_back(nickname); }
 
 void	Channel::pushUserInChannel(const std::string & nickName, int soket) { _usersVec.push_back(std::make_pair(nickName, soket)); }
+
+void    Channel::setHostName(const std::string &hostname)
+{
+    _userHostNick = hostname;
+}
+
+void    Channel::setPrivateChannel(bool b)
+{
+    _privateChannel = b;
+}
+
+void    Channel::setSecretChannel(bool b)
+{
+    _secretChannel = b;
+}
+
+void    Channel::setModerChannel(bool b)
+{
+    _moderChannel = b;
+}
+
+void    Channel::setBanMask(const std::string &mask)
+{
+    _banMask = mask;
+}
+
+std::string     Channel::getHostName() const
+{
+    return _userHostNick;
+}
