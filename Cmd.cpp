@@ -216,7 +216,6 @@ void Command::PrivMsg()
 
 void Command::joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass)
 {
-	std::cout << channel->getOnlyInvaite() << std::endl;
 	if (channel->getOnlyInvaite())
 		{
 			bool userInvate = false;

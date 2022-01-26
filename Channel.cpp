@@ -32,7 +32,8 @@ std::vector<std::pair<std::string, int > > &Channel::getUserInChannel() { return
 
 // Setters
 
-void                    Channel::setOnlyInvaite(bool b) { _hasPass = b; }
+void                    Channel::setOnlyInvaite(bool b) { _onlyInvaite = b; }
+
 void                    Channel::setHasPass(bool b) { _hasPass = b; }
 void	Channel::setChannelName(const std::string & channelName) { _channelName = channelName; }
 
