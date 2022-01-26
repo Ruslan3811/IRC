@@ -340,7 +340,7 @@ void Command::cmdInvite()
 		throw errorRequest(_msg.getParams()[0], _user->getNickName(), ERR_NOSUCHNICK);
 	else if (!hasChannel(_msg.getParams()[1]))
 		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_NOTONCHANNEL);
-	else
+	// else
 		
 }
 
