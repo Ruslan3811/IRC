@@ -33,6 +33,21 @@ int User::getFlag()const
     return _flag;
 }
 
+std::vector<std::string> & User::getAllChannel()
+{
+	return _channels;
+}
+
+void User::eraseOneChannel(const std::string & name)
+{
+	_channels.erase(find(_channels.begin(), _channels.end(), name));
+}
+
+void User::eraseAllChannel()
+{
+	_channels.erase(_channels.begin(), _channels.end());
+}
+
 int User::IsTrueLength(std::string str)
 {
     return str.length();

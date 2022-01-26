@@ -18,6 +18,7 @@ private:
     bool        _active;
 	bool		_registered;
 	std::vector<std::string> _message;
+    std::vector<std::string> _channels;
 	int			_fNick;
 	int			_fUser;
 	int			_fPass;
@@ -30,7 +31,14 @@ public:
 
     User(int socket, std::string host);
 
-    bool isAlreadyRegistered(void)const;
+    void eraseOneChannel(const std::string & name);
+
+    void eraseAllChannel();
+
+    bool isAlreadyRegistered(void) const;
+
+    std::vector<std::string> & getAllChannel();
+
     void setFlag(int flag);
 
     void setPassword(std::string password);

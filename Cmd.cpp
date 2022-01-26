@@ -8,6 +8,11 @@ void printNum()
 	std::cout << ++i << std::endl;
 }
 
+void send_(const std::string & msg, int soket)
+{
+	send(soket, msg.c_str(), msg.size(), IRC_NOSIGNAL);
+}
+
 void printVectorStr(std::vector<std::string> & vec)
 {
 	for (size_t i = 0; i < vec.size(); ++i)
@@ -36,9 +41,14 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["USER"] = &Command::cmdUser;
 	_command["PRIVMSG"] = &Command::PrivMsg;
 	_command["JOIN"] = &Command::cmdJoin;
+<<<<<<< HEAD
 	_command["NOTICE"] = &Command::cmdNotice;
 	_command["AWAY"] = &Command::cmdAway;
 	_command["INVITE"] = &Command::cmdInvite;
+=======
+	_command["MODE"] = &Command::cmdMode;
+
+>>>>>>> main
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
 		throw errorRequest(_msg.getCmd(), user->getNickName(), ERR_NOTREGISTERED);
@@ -212,7 +222,26 @@ void Command::PrivMsg()
 
 void Command::joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass)
 {
-
+	std::cout << channel->getOnlyInvaite() << std::endl;
+	if (channel->getOnlyInvaite())
+		{
+			bool userInvate = false;
+			std::vector<std::string> invaiteList = channel->getInviteListVec();
+			for (size_t i = 0; i < invaiteList.size(); ++i)
+			{
+				if (_user->getNickName() == invaiteList[i])
+				{
+					userInvate = true;
+					break;
+				}
+			}
+			if (userInvate == false)
+				throw errorRequest(channel->getChannelName(), ERR_INVITEONLYCHAN);
+		}
+	if (channel->getCountUser() >= channel->getUserInChannel().size())
+		throw errorRequest(channel->getChannelName(), ERR_CHANNELISFULL);
+	if (channel->getBanMask() != "" && _user->getNickName().find(channel->getBanMask()) != std::string::npos)
+		throw errorRequest(channel->getChannelName(), ERR_BADCHANMASK);
 	if (channelName[0] == '&')
 	{
 		channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
@@ -225,6 +254,8 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 		if (passVec[iterPass] == channel->getPass())
 			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
+	
+	send_("Join to channel complite!\n", _user->getSocket());
 }
 
 
@@ -244,7 +275,7 @@ void Command::cmdJoin()
 		size_t i = 0;
 		for (; i < _channels.size(); ++i)
 		{
-			if (_channels[i]->getChannelName() == channelsJoin[j].substr(1))
+			if (_channels[i]->getChannelName() == channelsJoin[j])
 			{
 				joinToChannel_(channelsJoin[j], _channels[i], channelPass, iterPass); // JOIN IN CHANNEL
 				break;
@@ -266,7 +297,7 @@ void Command::cmdJoin()
 				_pass = channelPass[iterPass];
 				++iterPass;
 			}
-			Channel * A = new Channel(channelsJoin[j].substr(1), _pass, _user->getNickName());
+			Channel * A = new Channel(channelsJoin[j], _pass, _user->getNickName());
 			A->pushUserInChannel(_user->getNickName(), _user->getSocket());
 			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
 			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
@@ -343,8 +374,7 @@ User    * Command::findUser_(const std::string & name)
 
 bool Command::onChannel(std::string channel)
 {
-	std::vector<Channel *>::iterator begin = _channels.begin();
-	std::vector<Channel *>::iterator end = _channels.end();
+	_user
 	for (;begin != end; ++begin)
 	{
 		if ((*begin)->getChannelName() == channel)
@@ -403,15 +433,20 @@ void Command::cmdMode()
 			if (user == 0)
 				throw errorRequest(param[countParam - 1], ERR_NOSUCHNICK);
 			channel->setHostName(param[countParam - 1]);
+			send(_user->getSocket(), "Set host name!\n", std::string("Set host name!\n").size(), IRC_NOSIGNAL);
 			break;
 		case 'p':
 			channel->setPrivateChannel(operation);
+			send(_user->getSocket(), "Set private channel!\n", std::string("Set private channel!\n").size(), IRC_NOSIGNAL);
 			break;
 		case 's':
 			channel->setSecretChannel(operation);
+			send(_user->getSocket(), "Set secret channel!\n", std::string("Set secret channel!\n").size(), IRC_NOSIGNAL);
 			break;
 		case 'i':
 			channel->setOnlyInvaite(operation);
+			send(_user->getSocket(), "Set only invaite!\n", std::string("Set only invaite!\n").size(), IRC_NOSIGNAL);
+
 			break;
 		case 't':
 			if (channel->getOnlyInvaite() == true && _user->getNickName() != channel->getHostName())
@@ -419,15 +454,20 @@ void Command::cmdMode()
 			break;
 		case 'm':
 			channel->setModerChannel(operation);
+			send(_user->getSocket(), "Set moder channel!\n", std::string("Set moder channel!\n").size(), IRC_NOSIGNAL);
 			break;
 		case 'l':
 			channel->setCountUser(atoi(param[countParam - 1].c_str()));
+			send(_user->getSocket(), "Set Count User!", std::string("Set Count User!\n").size(), IRC_NOSIGNAL);
 			break;
 		case 'b':
 			channel->setBanMask(param[countParam - 1]);
+			send(_user->getSocket(), "Set Ban Mask!\n", std::string("Set Ban Mask!\n").size(), IRC_NOSIGNAL);
+
 			break;
 		case 'k':
 			channel->setPass(param[countParam - 1]);
+			send(_user->getSocket(), "Set pass!\n", std::string("Set pass!\n").size(), IRC_NOSIGNAL);
 			break;
 		default:
 			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);

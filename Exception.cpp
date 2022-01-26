@@ -15,6 +15,8 @@ std::string errorRequest::_getErrorMessage(int codeError)
 			return _msg + " :Cannot send to channel\n";
 		case ERR_TOOMANYCHANNELS:
 			return _msg + " :You have joined too many channels\n";
+		case ERR_BADCHANMASK:
+			return _msg + " :You have bad nick to this channel\n";
 		case ERR_WASNOSUCHNICK:
 			return _msg + " :There was no such nickname\n";
 		case ERR_TOOMANYTARGETS:
