@@ -2,13 +2,14 @@
 
 // Constructors and destructor
 
-Channel::Channel(const std::string & channelName) : _channelName(channelName)
+Channel::Channel(const std::string & channelName) 
+: _channelName(channelName), _onlyInvaite(false), _hasPass(false), _secretChannel(false), _privateChannel(false), _moderChannel(false), _banMask(false) 
 {
     _topicChannel = "";
 }
 
 Channel::Channel(const std::string & channelName, const std::string & channelPass,const std::string & userName) 
-: _channelName(channelName), _pass(channelPass), _userHostNick(userName), _onlyInvaite(false), _hasPass(false) {}
+: _channelName(channelName), _pass(channelPass), _userHostNick(userName), _onlyInvaite(false), _hasPass(false), _secretChannel(false), _privateChannel(false), _moderChannel(false), _banMask(false)  {}
 
 Channel::~Channel() {}
 
