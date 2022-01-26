@@ -49,6 +49,8 @@ class  Command
 
 
     private:
+        Channel * findChannel_(const std::string & channel);
+        User    * findUser_(const std::string & name);
         void responseForCommand_(const std::string & msg, int numResponse) const;
         void createChannel_();
         void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);

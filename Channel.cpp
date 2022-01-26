@@ -4,7 +4,7 @@
 
 Channel::Channel(const std::string & channelName) : _channelName(channelName)
 {
-    
+    _topicChannel = "";
 }
 
 Channel::Channel(const std::string & channelName, const std::string & channelPass,const std::string & userName) 
@@ -35,7 +35,7 @@ void                    Channel::setOnlyInvaite(bool b) { _hasPass = b; }
 void                    Channel::setHasPass(bool b) { _hasPass = b; }
 void	Channel::setChannelName(const std::string & channelName) { _channelName = channelName; }
 
-void	Channel::setCountUser(const std::size_t & countUser) { _countUser = countUser; }
+void	Channel::setCountUser(std::size_t countUser) { _countUser = countUser; }
 
 void	Channel::setPass(const std::string & pass) { _pass = pass; }
 

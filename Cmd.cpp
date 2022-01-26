@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Cmd.hpp"
+#include <string>
 
 void printNum()
 {
@@ -16,6 +17,17 @@ void printVectorStr(std::vector<std::string> & vec)
 	std::cout << std::endl;
 }
 
+
+Channel * Command::findChannel_(const std::string & channel)
+{
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (channel == _channels[i]->getChannelName())
+			return _channels[i];
+	}
+	return 0;
+
+}
 Command::Command(const Message & msg, User * user, std::vector<User *> & users, std::vector<Channel *> & channels, std::string servPass) 
 : _msg(msg), _user(user), _users(users), _channels(channels), commandGiveResponse(false), _servPass(servPass)
 {
@@ -302,4 +314,83 @@ void Command::cmdAway()
 void Command::cmdNotice()
 {
 	PrivMsg();
+}
+
+User    * Command::findUser_(const std::string & name)
+{
+	for (size_t i = 0; i < _users.size(); ++i)
+	{
+		if (_users[i]->getNickName() == name)
+			return _users[i];
+	}
+	return (0);
+}
+
+
+void Command::cmdMode()
+{
+	std::vector<std::string> param = _msg.getParams();
+	size_t countParam = 2;
+
+	bool	operation = true;
+	if (param.size() < countParam)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	Channel * channel = findChannel_(param[0]);
+	if (channel == 0)
+		throw errorRequest(param[0], ERR_NOTONCHANNEL);
+	if (_user->getNickName() != channel->getHostName())
+		throw errorRequest(_user->getNickName(), ERR_USERSDONTMATCH);
+	User * user;
+	for (size_t i = 0; i < param[1].size(); ++i)
+	{
+		if (param[1][i] == 'l' || param[1][i] == 'b' || param[1][i] == 'o' || param[1][i] == 'o')
+		{
+			++countParam;
+			if (param.size() < countParam)
+				throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+		}
+		switch (param[1][i])
+		{
+		case '+':
+			operation = true;
+			break;
+		case '-':
+			operation = false;
+			break;
+		case 'o':
+			user = findUser_(param[countParam - 1]);
+			if (user == 0)
+				throw errorRequest(param[countParam - 1], ERR_NOSUCHNICK);
+			channel->setHostName(param[countParam - 1]);
+			break;
+		case 'p':
+			channel->setPrivateChannel(operation);
+			break;
+		case 's':
+			channel->setSecretChannel(operation);
+			break;
+		case 'i':
+			channel->setOnlyInvaite(operation);
+			break;
+		case 't':
+			if (channel->getOnlyInvaite() == true && _user->getNickName() != channel->getHostName())
+				throw errorRequest(_user->getNickName(), ERR_CHANOPRIVSNEEDED);
+			break;
+		case 'm':
+			channel->setModerChannel(operation);
+			break;
+		case 'l':
+			channel->setCountUser(atoi(param[countParam - 1].c_str()));
+			break;
+		case 'b':
+			channel->setBanMask(param[countParam - 1]);
+			break;
+		case 'k':
+			channel->setPass(param[countParam - 1]);
+			break;
+		default:
+			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
+		}
+	}
+	
 }
