@@ -47,10 +47,12 @@ class  Command
         void cmdInvite(void);
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
-        bool hasNickName(std::string param, std::string nicknamesender);
-        bool Command::hasChannel(std::string channel);
+        bool hasNickName(std::string param);
+        bool hasChannel(std::string channel);
 
     private:
+        Channel * findChannel_(const std::string & channel);
+        User    * findUser_(const std::string & name);
         void responseForCommand_(const std::string & msg, int numResponse) const;
         void createChannel_();
         void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
