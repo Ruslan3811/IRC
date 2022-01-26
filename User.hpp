@@ -23,6 +23,7 @@ private:
 	int			_fPass;
     std::string _away_status;
     int         _awayflag;
+
 public:
     User(void);
     ~User(void);

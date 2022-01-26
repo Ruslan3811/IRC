@@ -5,7 +5,7 @@
 
 Message::Message(const std::string str) : _prefix(""), _cmd("")
 {
-    std::cout << "START" << std::endl;
+    // std::cout << "START" << std::endl;
 
 
 	std::vector<std::string> vec;
@@ -42,14 +42,14 @@ Message::Message(const std::string str) : _prefix(""), _cmd("")
     }
     
     
-    std::cout << "PREFIX: |" << _prefix << "|" << std::endl;
-    std::cout << "CMD: |" << _cmd << "|" << std::endl;
-    std::vector<std::string>::iterator ind = _parameters.begin();
-    std::cout << "PARAMS: |";
-    for(; ind != _parameters.end(); ++ind)
-       std::cout << *ind << "|";
-    std::cout << "\nTRAILING: |" << _trailing << "|" << std::endl;
-    std::cout << "END" << std::endl;
+    // std::cout << "PREFIX: |" << _prefix << "|" << std::endl;
+    // std::cout << "CMD: |" << _cmd << "|" << std::endl;
+    // std::vector<std::string>::iterator ind = _parameters.begin();
+    // std::cout << "PARAMS: |";
+    // for(; ind != _parameters.end(); ++ind)
+    //    std::cout << *ind << "|";
+    // std::cout << "\nTRAILING: |" << _trailing << "|" << std::endl;
+    // std::cout << "END" << std::endl;
     
     // std::cout << getCmd() << "\n" ;
     //Если понадобится вектор

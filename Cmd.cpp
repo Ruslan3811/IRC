@@ -24,6 +24,9 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["USER"] = &Command::cmdUser;
 	_command["PRIVMSG"] = &Command::PrivMsg;
 	_command["JOIN"] = &Command::cmdJoin;
+	_command["NOTICE"] = &Command::cmdNotice;
+	_command["AWAY"] = &Command::cmdAway;
+	_command["INVITE"] = &Command::cmdInvite;
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
 		throw errorRequest(_msg.getCmd(), user->getNickName(), ERR_NOTREGISTERED);
@@ -247,7 +250,7 @@ void Command::cmdJoin()
 			if (channelsJoin[j][i] == '#')
 			{
 				if (iterPass >= channelPass.size())
-					 throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+					throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 				_pass = channelPass[iterPass];
 				++iterPass;
 			}
@@ -303,3 +306,43 @@ void Command::cmdNotice()
 {
 	PrivMsg();
 }
+
+bool Command::hasNickName(std::string param, std::string nicknamesender)
+{
+	std::vector<User *>::iterator begin = _users.begin();
+	std::vector<User *>::iterator end = _users.end();
+	std::cout << (*begin)->getNickName() << "<<<<<<<<<<<<" << param;
+	for (;begin != end; ++begin)
+	{
+		if (param == (*begin)->getNickName() && nicknamesender != param)
+			return (1);
+	}
+	return (0);
+}
+
+bool Command::hasChannel(std::string channel)
+{
+	std::vector<Channel *>::iterator begin = _channels.begin();
+	std::vector<Channel *>::iterator end = _channels.end();
+	for (;begin != end; ++begin)
+	{
+		if ((*begin)->getChannelName() == channel)
+			return 1;
+	}
+	return (0);
+}
+
+void Command::cmdInvite()
+{
+	if (_msg.getParams().size() < 2)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	else if (!hasNickName(_msg.getParams()[0], _user->getNickName()))
+		throw errorRequest(_msg.getParams()[0], _user->getNickName(), ERR_NOSUCHNICK);
+	else if (!hasChannel(_msg.getParams()[1]))
+		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_NOTONCHANNEL);
+	else
+		
+}
+
+//NICKNAME
+//Active

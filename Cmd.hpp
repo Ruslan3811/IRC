@@ -44,9 +44,11 @@ class  Command
         void cmdMode(void);
         void cmdNotice(void);
         void cmdAway(void);
+        void cmdInvite(void);
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
-
+        bool hasNickName(std::string param, std::string nicknamesender);
+        bool Command::hasChannel(std::string channel);
 
     private:
         void responseForCommand_(const std::string & msg, int numResponse) const;
