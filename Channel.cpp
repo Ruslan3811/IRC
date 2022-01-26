@@ -66,6 +66,11 @@ void    Channel::setModerChannel(bool b)
     _moderChannel = b;
 }
 
+std::string Channel::getBanMask() const
+{
+    return _banMask;
+}
+
 void    Channel::setBanMask(const std::string &mask)
 {
     _banMask = mask;
