@@ -38,6 +38,8 @@ public:
     std::string             getHostName() const;
     std::string             getTopicChannel() const;
     bool                    getModerChannel() const;
+    bool                    isPrivateChannel() const;
+
 
     void                    setOnlyInvaite(bool);
     void                    setHasPass(bool);

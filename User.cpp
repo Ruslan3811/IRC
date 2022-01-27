@@ -43,6 +43,11 @@ void User::eraseOneChannel(const std::string & name)
 	_channels.erase(find(_channels.begin(), _channels.end(), name));
 }
 
+void User::addOneChannelToUsersVectorChannel(std::string channel)
+{
+	_channels.push_back(channel);
+}
+
 void User::eraseAllChannel()
 {
 	_channels.erase(_channels.begin(), _channels.end());

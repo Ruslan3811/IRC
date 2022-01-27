@@ -34,7 +34,7 @@ public:
     void eraseOneChannel(const std::string & name);
 
     void eraseAllChannel();
-
+    void addOneChannelToUsersVectorChannel(std::string channel);
     bool isAlreadyRegistered(void) const;
 
     std::vector<std::string> & getAllChannel();
