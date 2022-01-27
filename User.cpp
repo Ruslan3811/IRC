@@ -35,10 +35,12 @@ std::vector<std::string> & User::getAllChannel()
 
 void User::eraseOneChannel(const std::string & name)
 {
-	_channels.erase(find(_channels.begin(), _channels.end(), name));
+	std::vector<std::string>::iterator it = std::find(_channels.begin(), _channels.end(), name);
+    if (it != _channels.end())
+        _channels.erase(it);
 }
 
-void User::addOneChannelToUsersVectorChannel(std::string channel)
+void User::pushChannelName(const std::string & channel)
 {
 	_channels.push_back(channel);
 }

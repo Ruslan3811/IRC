@@ -1,7 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
+#include "dop_function.hpp"
 
 class Message
 {
@@ -25,4 +24,3 @@ public:
 };
 
 // Alena
-std::vector<std::string> split(const std::string str, const char * ch);
