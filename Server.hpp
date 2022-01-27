@@ -47,10 +47,10 @@ private:
 	int					_clientSocket;
 	// std::map<std::string, Cmd> _command;
 
-	Server();
 	Server(const Server& copy);
 	Server	&operator=(const Server& other);
 public:
+	Server();
 	Server(int port, const std::string &password);
 	virtual ~Server();
 

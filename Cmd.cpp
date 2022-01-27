@@ -61,7 +61,7 @@ void Command::checkConnection() {
 		if (_servPass.size() == 0 || _user->getPassword() == _servPass) {
 			if (_user->getRegistered() == false) {
 				_user->setRegistered(true);
-				send(_user->getSocket(), "Registration complete!\n", 24, 0);
+				send_("Registration complete!\n", _user->getSocket());
 				// sendMOTD(_user);
 			}
 		}
@@ -187,8 +187,8 @@ void Command::PrivMsg()
 			{
 				if (_users[j]->getNickName() == userAndChanel[i].first)
 				{
-					std::string returnMessage = ":" + _user->getNickName(); // fixed
-					send(_users[j]->getSocket(), messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
+					std::string returnMessage = "From: " + _user->getNickName() + " To: " + _users[j]->getNickName() + " PRIVMSG: " + messegeFromUser;
+					send(_users[j]->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
 					break;
 				}
 			}
@@ -208,8 +208,8 @@ void Command::PrivMsg()
 						{
 							if (_user->getSocket() == vecUserInChannel[k].second)
 								continue;
-							std::string returnMessage = ":" + _user->getNickName(); // fixed
-							send(vecUserInChannel[k].second, messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
+							std::string returnMessage = "From: " + _channels[j]->getChannelName() + ", " + _user->getNickName() + " To: " + vecUserInChannel[k].first + " PRIVMSG: " + messegeFromUser;
+							send(vecUserInChannel[k].second, returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
 						}
 					}
 				}
@@ -251,8 +251,8 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 		if (passVec[iterPass] == channel->getPass())
 			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
-	
-	send_("Join to channel complite!\n", _user->getSocket()); // fixed
+	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelName + "\n";
+	send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
 }
 
 void Command::cmdJoin()
@@ -294,6 +294,8 @@ void Command::cmdJoin()
 			}
 			Channel * A = new Channel(channelsJoin[j], _pass, _user->getNickName());
 			A->pushUserInChannel(_user->getNickName(), _user->getSocket());
+			std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelsJoin[j] + "\n";
+			send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
 			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
 			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
 			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
@@ -309,13 +311,13 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 	switch (numResponse)
 	{
 		case RPL_NOTOPIC:
-			messege = msg + " :No topic is set\n";
+			messege = ":" + _user->getServerName() + " 331 " + _user->getNickName() + " " + msg + " :No topic is set\n";
 			break;
 		case RPL_NAMREPLY:
-			messege = msg + " :[[@|+]<nick> [[@|+]<nick> [...]]]\n"; // fix
+			messege = ":" + _user->getServerName() + " 353 " + _user->getNickName() + " = " + msg + " :@" + _user->getNickName() + "\n";
 			break;
 		case RPL_ENDOFNAMES:
-			messege = msg + " :End of /NAMES list\n"; // fix
+			messege = ":" + _user->getServerName() + " 366 " + _user->getNickName() + " " + msg + " :End of /NAMES list\n";
 			break;
 		case RPL_NOWAWAY:
 			messege = msg + " :You have been marked as being away\n";
@@ -490,19 +492,19 @@ void Command::cmdMode()
 			if (user == 0)
 				throw errorRequest(param[countParam - 1], ERR_NOSUCHNICK);
 			channel->setHostName(param[countParam - 1]);
-			send(_user->getSocket(), "Set host name!\n", std::string("Set host name!\n").size(), IRC_NOSIGNAL);
+			send_("Set host name!\n", _user->getSocket());
 			break;
 		case 'p':
 			channel->setPrivateChannel(operation);
-			send(_user->getSocket(), "Set private channel!\n", std::string("Set private channel!\n").size(), IRC_NOSIGNAL);
+			send_("Set private channel!\n", _user->getSocket());
 			break;
 		case 's':
 			channel->setSecretChannel(operation);
-			send(_user->getSocket(), "Set secret channel!\n", std::string("Set secret channel!\n").size(), IRC_NOSIGNAL);
+			send_("Set secret channel!\n", _user->getSocket());
 			break;
 		case 'i':
 			channel->setOnlyInvaite(operation);
-			send(_user->getSocket(), "Set only invaite!\n", std::string("Set only invaite!\n").size(), IRC_NOSIGNAL);
+			send_("Set only invaite!\n", _user->getSocket());
 
 			break;
 		case 't':
@@ -555,7 +557,7 @@ void Command::cmdKick()
 		User *kicked_user = findUser_(_msg.getParams()[1]);
 		std::cout << kicked_user->getUserName();
 		kicked_user->eraseOneChannel(_msg.getParams()[0]);
-		Channel *kick_from_channel = findChannel_(_msg.getParams()[0]);
+		// Channel *kick_from_channel = findChannel_(_msg.getParams()[0]);
 		// std::vector<std::pair<std::string, int > > tmp_vec = kick_from_channel->getUserInChannel();
 		// size_t i = 0;
     	// while(i < tmp_vec.size())

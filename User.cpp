@@ -1,7 +1,7 @@
 #include "Server.hpp"
 
-User::User(int socket, std::string host) 
-: _socket(socket), _host(host), _password(""), _nickname(""), _username(""),_hostname(""), _servername(""), _realname("")
+User::User(int socket, std::string host, std::string servername) 
+: _socket(socket), _host(host), _password(""), _nickname(""), _username(""), _servername(servername), _realname("")
 {
 	_flag = 0;
 	_registered = false;
@@ -22,11 +22,6 @@ void User::setUserName(std::string username)
 }
 
 void User::setNickName(std::string nickname) { _nickname = nickname; }
-
-void User::setSocket(int sock)
-{
-    _socket = sock;
-}
 
 int User::getFlag()const
 {
@@ -160,4 +155,6 @@ std::string User::getAwayStatus()const
 	_away_status = msg;
  }
 
+std::string User::getHostName() const { return _host; }
 std::string User::getPassword()const { return _password; }
+std::string User::getServerName()const { return _servername; }

@@ -11,7 +11,6 @@ private:
     std::string _password;
     std::string _nickname;
     std::string _username;
-    std::string _hostname;
     std::string _servername;
     std::string _realname;
     int         _flag;
@@ -29,7 +28,7 @@ public:
     User(void);
     ~User(void);
 
-    User(int socket, std::string host);
+    User(int socket, std::string host, std::string servername);
 
     void eraseOneChannel(const std::string & name);
 
@@ -45,7 +44,6 @@ public:
     int IsTrueLength(std::string str);
 
     int getSocket()const;
-    void setSocket(int sock);
 
     int getFlag()const;
 
@@ -53,10 +51,12 @@ public:
     int readMsg();
 
 	bool getRegistered() const;
-    std::string getRealName()const;
+    std::string getHostName()const;
     std::string getPassword()const;
     std::string getNickName()const;
     std::string getUserName()const;
+    std::string getServerName()const;
+    std::string getRealName()const;
 	std::vector<std::string> getMessage() const;
 
 	void setRegistered(bool registered);

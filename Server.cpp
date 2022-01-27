@@ -27,6 +27,10 @@ void exita(std::string msg) {
 	exit(1);
 }
 
+Server::Server() {
+	_serverName = "IRC";
+}
+
 Server::Server(int port, const std::string &password) : _port(port), _password(password) {
 	_serverName = "IRC";
 }
@@ -83,7 +87,7 @@ void Server::acceptUsers() {
 		pfd.events = POLLIN;
 		pfd.revents = POLLERR;
 		_fdUsers.push_back(pfd);
-		User *a = new User(_clientSocket, host);
+		User *a = new User(_clientSocket, host, _serverName);
 		_UsersAccept.push_back(a);
 	} 
 }
