@@ -41,7 +41,11 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["USER"] = &Command::cmdUser;
 	_command["PRIVMSG"] = &Command::PrivMsg;
 	_command["JOIN"] = &Command::cmdJoin;
+	_command["NOTICE"] = &Command::cmdNotice;
+	_command["AWAY"] = &Command::cmdAway;
+	_command["INVITE"] = &Command::cmdInvite;
 	_command["MODE"] = &Command::cmdMode;
+	_command["KICK"] = &Command::cmdKick;
 
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
@@ -251,8 +255,6 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 	send_("Join to channel complite!\n", _user->getSocket()); // fixed
 }
 
-
-
 void Command::cmdJoin()
 {
 	std::vector<std::string> param = _msg.getParams();
@@ -286,7 +288,7 @@ void Command::cmdJoin()
 			if (channelsJoin[j][i] == '#')
 			{
 				if (iterPass >= channelPass.size())
-					 throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+					throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 				_pass = channelPass[iterPass];
 				++iterPass;
 			}
@@ -296,6 +298,7 @@ void Command::cmdJoin()
 			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
 			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
 			_channels.push_back(A);
+			_user->addOneChannelToUsersVectorChannel(A->getChannelName());
 		}
 	}
 }
@@ -315,11 +318,18 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 			messege = msg + " :End of /NAMES list\n"; // fix
 			break;
 		case RPL_NOWAWAY:
-			messege = msg + " :You have been marked as being away";
+			messege = msg + " :You have been marked as being away\n";
 			break;
 		case RPL_UNAWAY:
-			messege = msg + " :You are no longer marked as being away";
+			messege = msg + " :You are no longer marked as being away\n";
 			break;
+		case RPL_AWAY:
+			messege = msg + "\n";
+			break;
+		case RPL_INVITING:
+			messege = msg + "\n";
+			break;
+
 	}
 	send(_user->getSocket(), messege.c_str(), messege.size(), IRC_NOSIGNAL);
 }
@@ -343,6 +353,18 @@ void Command::cmdNotice()
 	PrivMsg();
 }
 
+bool Command::hasNickName(std::string param)
+{
+	std::vector<User *>::iterator begin = _users.begin();
+	std::vector<User *>::iterator end = _users.end();
+	for (;begin != end; ++begin)
+	{
+		if (param == (*begin)->getNickName())
+			return (true);
+	}
+	return (false);
+}
+
 User    * Command::findUser_(const std::string & name)
 {
 	for (size_t i = 0; i < _users.size(); ++i)
@@ -353,6 +375,85 @@ User    * Command::findUser_(const std::string & name)
 	return (0);
 }
 
+bool Command::onChannel(std::string channel)
+{
+	std::vector<std::string>::iterator begin = _user->getAllChannel().begin();
+	std::vector<std::string>::iterator end = _user->getAllChannel().end();
+	for (;begin != end; ++begin)
+	{
+		if ((*begin) == channel)
+			return true;
+	}
+	return (false);
+}
+
+bool Command::ClientOnChannel(std::string user, std::string channel)
+{
+	std::vector<User *>::iterator begin = _users.begin();
+	std::vector<User *>::iterator end = _users.end();
+	std::vector<std::string> channels;
+	for (; begin!= end; ++begin)
+	{
+		if ((*begin)->getNickName() == user)
+			channels = (*begin)->getAllChannel();
+	}
+	std::vector<std::string>::iterator begin_ch = channels.begin();
+	std::vector<std::string>::iterator end_ch = channels.end();
+	for (; begin_ch!= end_ch; ++begin_ch)
+	{
+		if ((*begin_ch) == channel)
+			return true;
+	}
+	return false;
+}
+
+bool Command::isOperator(std::string channel)
+{
+	std::vector<Channel *>::iterator begin = _channels.begin();
+	std::vector<Channel *>::iterator end = _channels.end();
+
+	for (;begin != end; ++begin)
+	{
+		if ((*begin)->getChannelName() == channel && (*begin)->getHostName() != _user->getNickName() && (*begin)->isPrivateChannel())
+			return false;
+	}
+	return true;
+}
+
+std::string Command::userAwayFlag(std::string user)
+{
+	std::vector<User *>::iterator begin = _users.begin();
+	std::vector<User *>::iterator end = _users.end();
+
+	for (;begin != end; ++begin)
+	{
+		if ((*begin)->getNickName() == user)
+			return (*begin)->getAwayStatus();
+	}
+	return ("");
+}
+
+void Command::cmdInvite()
+{
+	if (_msg.getParams().size() < 2)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	else if (!hasNickName(_msg.getParams()[0]))
+		throw errorRequest(_msg.getParams()[0], _user->getNickName(), ERR_NOSUCHNICK);
+	else if (!onChannel(_msg.getParams()[1]))
+		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_NOTONCHANNEL);
+	else if (ClientOnChannel(_msg.getParams()[0], _msg.getParams()[1]))
+		throw errorRequest(_msg.getParams()[0], ERR_USERONCHANNEL);
+	else if (!isOperator(_msg.getParams()[1]))
+		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_CHANOPRIVSNEEDED);
+	if (userAwayFlag(_msg.getParams()[0]).length() > 0)
+		responseForCommand_(_msg.getParams()[0] + " " + userAwayFlag(_msg.getParams()[0]), RPL_AWAY);
+	responseForCommand_(_msg.getParams()[1] + " " + _msg.getParams()[0], RPL_INVITING);
+	Channel *ch = findChannel_(_msg.getParams()[1]);
+	ch->pushInviteListVec(_msg.getParams()[0]);
+}
+
+//NICKNAME
+//Active
 
 void Command::cmdMode()
 {
@@ -429,5 +530,43 @@ void Command::cmdMode()
 			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
 		}
 	}
+	
 }
 
+void Command::cmdKick()
+{
+	if (_msg.getParams().size() < 1)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	else if (!isOperator(_msg.getParams()[1]) && !_msg.getPrefix().length())
+		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_CHANOPRIVSNEEDED);
+	else if (!onChannel(_msg.getParams()[0]))
+		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_NOTONCHANNEL);
+	else if (!findChannel_(_msg.getParams()[0]))
+		throw errorRequest(_msg.getParams()[0], _user->getNickName(), ERR_NOSUCHCHANNEL);
+	else if (findChannel_(_msg.getParams()[0])->getBanMask() != "" && _user->getNickName().find(findChannel_(_msg.getParams()[0])->getBanMask()) != std::string::npos)
+		throw errorRequest(findChannel_(_msg.getParams()[0])->getChannelName(), ERR_BADCHANMASK);
+	if (_msg.getPrefix().length() > 0)
+	{
+		send_("Kick " + _msg.getParams()[1] + " from " + _msg.getParams()[0] + "\n", findUser_(findChannel_(_msg.getParams()[0])->getHostName())->getSocket());
+		send_("You are kicked from " + _msg.getParams()[0] + "\n", findUser_(_msg.getParams()[0])->getSocket());
+	}
+	else
+	{
+		User *kicked_user = findUser_(_msg.getParams()[1]);
+		std::cout << kicked_user->getUserName();
+		kicked_user->eraseOneChannel(_msg.getParams()[0]);
+		Channel *kick_from_channel = findChannel_(_msg.getParams()[0]);
+		// std::vector<std::pair<std::string, int > > tmp_vec = kick_from_channel->getUserInChannel();
+		// size_t i = 0;
+    	// while(i < tmp_vec.size())
+		// {
+        // 	if (tmp_vec[i].first == _msg.getParams()[1])
+        //     	tmp_vec.erase(tmp_vec.begin() + i);
+        // 	else
+        //     	i++;
+		// }
+		if (_msg.getTrailing().length() > 0)
+			send_(":" + _msg.getTrailing(), _user->getSocket());
+	}
+		
+}

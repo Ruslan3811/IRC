@@ -81,3 +81,8 @@ std::string     Channel::getHostName() const
 {
     return _userHostNick;
 }
+
+bool    Channel::isPrivateChannel() const
+{
+    return _privateChannel;
+}

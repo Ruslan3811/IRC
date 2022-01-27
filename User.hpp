@@ -24,6 +24,7 @@ private:
 	int			_fPass;
     std::string _away_status;
     int         _awayflag;
+
 public:
     User(void);
     ~User(void);
@@ -33,7 +34,7 @@ public:
     void eraseOneChannel(const std::string & name);
 
     void eraseAllChannel();
-
+    void addOneChannelToUsersVectorChannel(std::string channel);
     bool isAlreadyRegistered(void) const;
 
     std::vector<std::string> & getAllChannel();

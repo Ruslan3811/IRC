@@ -52,7 +52,7 @@ std::string errorRequest::_getErrorMessage(int codeError)
 		case ERR_NOTONCHANNEL:
 			return _msg + " :You're not on that channel\n";
 		case ERR_USERONCHANNEL:
-			return _user + _msg + " :is already on channel\n";
+			return _msg + " :is already on channel\n";
 		case ERR_NOLOGIN:
 			return _user + " :User not logged in\n";
 		case ERR_SUMMONDISABLED:

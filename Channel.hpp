@@ -38,6 +38,8 @@ public:
     std::string             getHostName() const;
     std::string             getTopicChannel() const;
     bool                    getModerChannel() const;
+    bool                    isPrivateChannel() const;
+
 
     void                    setOnlyInvaite(bool);
     void                    setHasPass(bool);
@@ -53,5 +55,4 @@ public:
     void	                pushBanListVec(const std::string & nickname);
 	void	                pushInviteListVec(const std::string & nickname);
     void	                pushUserInChannel(const std::string & nickName, int soket);
-
 };
