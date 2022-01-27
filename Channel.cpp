@@ -20,7 +20,7 @@ bool                    Channel::getOnlyInvaite() const {return _onlyInvaite; };
 
 std::string Channel::getChannelName() const { return _channelName; }
 
-std::size_t     Channel::getCountUser() const { return _countUser; }
+std::size_t     Channel::getCountUser() const { return _usersVec.size(); }
 
 std::string     Channel::getPass() const { return _pass; }
 

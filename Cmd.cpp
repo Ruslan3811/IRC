@@ -584,6 +584,8 @@ void Command::cmdPart() {
 		else {
 			for (size_t i = 0; i < _user->getAllChannel().size(); ++i) {
 				if (*it == _user->getAllChannel()[i]) {
+					findChannel_(*it)->eraseUserForChannel(_user->getNickName(), _user->getSocket());
+					findChannel_(*it)->eraseUserForInvaiteList(_user->getNickName());
 					_user->eraseOneChannel(*it);
 					vec_ch.push_back(*it);
 				}
