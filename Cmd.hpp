@@ -48,6 +48,7 @@ class  Command
         void cmdNotice(void);
         void cmdAway(void);
         void cmdInvite(void);
+        void cmdTopic();
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
         void cmdKick();

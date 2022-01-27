@@ -228,7 +228,7 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 			if (userInvate == false)
 				throw errorRequest(channel->getChannelName(), ERR_INVITEONLYCHAN);
 		}
-	if (channel->getCountUser() >= channel->getUserInChannel().size())
+	if (channel->getCountUserCanJoin() >= channel->getUserInChannel().size())
 		throw errorRequest(channel->getChannelName(), ERR_CHANNELISFULL);
 	if (channel->getBanMask() != "" && _user->getNickName().find(channel->getBanMask()) != std::string::npos)
 		throw errorRequest(channel->getChannelName(), ERR_BADCHANMASK);
@@ -243,6 +243,8 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 		if (passVec[iterPass] == channel->getPass())
 			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
+		else
+			throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_BADCHANNELKEY);
 	}
 	_user->pushChannelName(channelName);
 	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelName + "\n";
@@ -279,8 +281,9 @@ void Command::cmdJoin()
 		else if (i == _channels.size()) // CREATE CHANNEL 
 		{
 			std::string _pass = "";
-			if (channelsJoin[j][i] == '#')
+			if (channelsJoin[j][0] == '#')
 			{
+				std::cout << "pass" << std::endl;
 				if (iterPass >= channelPass.size())
 					throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 				_pass = channelPass[iterPass];
@@ -597,4 +600,10 @@ void Command::cmdPart() {
 		deleteChannels += vec_ch[i] + " ";
 	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " PART:" + deleteChannels + "\n";
 	send_(returnMessage, _user->getSocket());
+}
+
+
+void Command::cmdTopic()
+{
+
 }

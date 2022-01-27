@@ -27,6 +27,8 @@ public:
     Channel(const std::string & channelName, const std::string & channelPass, const std::string & userName);
     ~Channel();
 
+    std::size_t     getCountUserCanJoin() const;
+
     std::string                 getChannelName() const;
     std::size_t                 getCountUser() const;
     std::string                 getPass() const;
