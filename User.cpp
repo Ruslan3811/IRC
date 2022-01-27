@@ -121,11 +121,10 @@ int User::readMsg() {
 				break;
 			}
 		}
-		if (bytesRecv < 0) {
+		if (bytesRecv <= 0) {
+			_active = false;
 			return (-1);
 		}
-		else if (bytesRecv == 0)
-			_active = false;
 	}
 	_message.push_back(msg);
 	return (0);

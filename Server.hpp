@@ -59,6 +59,7 @@ public:
 	void listenSocket();
 	void acceptUsers();
 	void receivingMessages();
+	void deleteNotActiveUsers();
 	Message parseMsg(const int idx);
 
 	int getPort() const { return _port; }
