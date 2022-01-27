@@ -42,10 +42,10 @@ Server::~Server() {
 		close((*it)->getSocket());
 		delete *it;
 	}
-	std::vector<Channel *>::iterator it = _channels.begin();
-	std::vector<Channel *>::iterator it2 = _channels.end();
-	for (; it != it2; ++it) {
-		delete *it;
+	std::vector<Channel *>::iterator it3 = _channels.begin();
+	std::vector<Channel *>::iterator it4 = _channels.end();
+	for (; it3 != it4; ++it) {
+		delete *it3;
 	}
 }
 
@@ -102,6 +102,15 @@ void Server::receivingMessages() {
 	if (ret > 0) {
 		std::vector<pollfd>::iterator it = _fdUsers.begin();
 		std::vector<pollfd>::iterator it2 = _fdUsers.end();
+
+		std::vector<User *>::iterator beg = _UsersAccept.begin();
+		std::vector<User *>::iterator end = _UsersAccept.end();
+		while (beg != end) {
+			if ((*beg)->getActive() == false)
+				_UsersAccept.erase(beg);
+			else
+				++beg;
+		}
 		for (; it != it2; ++it) {
 			if (it->revents == POLLIN) { // если произошло событие
 				int idx = it - _fdUsers.begin();

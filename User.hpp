@@ -58,6 +58,7 @@ public:
     std::string getServerName()const;
     std::string getRealName()const;
 	std::vector<std::string> getMessage() const;
+    bool getActive() const;
 
 	void setRegistered(bool registered);
     void setUserName(std::string username);

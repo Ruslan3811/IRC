@@ -46,6 +46,7 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["INVITE"] = &Command::cmdInvite;
 	_command["MODE"] = &Command::cmdMode;
 	_command["KICK"] = &Command::cmdKick;
+	_command["PART"] = &Command::cmdPart;
 
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
@@ -515,20 +516,20 @@ void Command::cmdMode()
 			break;
 		case 'm':
 			channel->setModerChannel(operation);
-			send(_user->getSocket(), "Set moder channel!\n", std::string("Set moder channel!\n").size(), IRC_NOSIGNAL);
+			send_("Set moder channel!\n", _user->getSocket());
 			break;
 		case 'l':
 			channel->setCountUser(atoi(param[countParam - 1].c_str()));
-			send(_user->getSocket(), "Set Count User!", std::string("Set Count User!\n").size(), IRC_NOSIGNAL);
+			send_("Set Count User!", _user->getSocket());
 			break;
 		case 'b':
 			channel->setBanMask(param[countParam - 1]);
-			send(_user->getSocket(), "Set Ban Mask!\n", std::string("Set Ban Mask!\n").size(), IRC_NOSIGNAL);
+			send_("Set Ban Mask!\n", _user->getSocket());
 
 			break;
 		case 'k':
 			channel->setPass(param[countParam - 1]);
-			send(_user->getSocket(), "Set pass!\n", std::string("Set pass!\n").size(), IRC_NOSIGNAL);
+			send_("Set pass!\n", _user->getSocket());
 			break;
 		default:
 			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
@@ -573,4 +574,37 @@ void Command::cmdKick()
 			send_(":" + _msg.getTrailing(), _user->getSocket());
 	}
 		
+}
+
+void Command::cmdPart() {
+	std::vector<std::string> param = _msg.getParams();
+	std::vector<std::string> channels = split(param[0], ",");
+	if (channels.size() < 1)
+		throw errorRequest(_msg.getCmd(), ERR_NEEDMOREPARAMS);
+	std::vector<std::string>::iterator it = channels.begin();
+	std::vector<std::string>::iterator it2 = channels.end();
+	std::vector<std::string> vec_ch;
+	// for (size_t i; i < _user->getAllChannel().size(); ++i) {
+	// 	std::cout << _user->getAllChannel()[i] << " ";
+	// }
+	// std::cout << std::endl;
+	for (; it != it2; ++it) {
+		if (!onChannel(*it))
+			throw errorRequest(*it, ERR_NOTONCHANNEL);
+		else if (!findChannel_(*it))
+			throw errorRequest(*it, ERR_NOSUCHCHANNEL);
+		else {
+			for (size_t i = 0; i < _user->getAllChannel().size(); ++i) {
+				if (*it == _user->getAllChannel()[i]) {
+					_user->eraseOneChannel(*it);
+					vec_ch.push_back(*it);
+				}
+			}
+		}
+	}
+	std::string deleteChannels;
+	for (size_t i = 0; i < vec_ch.size(); ++i)
+		deleteChannels += vec_ch[i] + " ";
+	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " PART:" + deleteChannels + "\n";
+	send_(returnMessage, _user->getSocket());
 }
