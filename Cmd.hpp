@@ -38,6 +38,7 @@ class  Command
     public:
         Command(const Message & msg, User * user, std::vector<User *> & users, \
             std::vector<Channel *> & channels, std::string servPass);
+        virtual ~Command();
         void checkConnection(void);
         void cmdPass(void);
 	    void cmdUser(void);

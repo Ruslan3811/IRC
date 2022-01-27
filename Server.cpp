@@ -42,6 +42,11 @@ Server::~Server() {
 		close((*it)->getSocket());
 		delete *it;
 	}
+	std::vector<Channel *>::iterator it = _channels.begin();
+	std::vector<Channel *>::iterator it2 = _channels.end();
+	for (; it != it2; ++it) {
+		delete *it;
+	}
 }
 
 void Server::createSocket() {
