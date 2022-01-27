@@ -183,7 +183,7 @@ void Command::PrivMsg()
 			{
 				if (_users[j]->getNickName() == userAndChanel[i].first)
 				{
-					std::string returnMessage = ":" + _user->getNickName();
+					std::string returnMessage = ":" + _user->getNickName(); // fixed
 					send(_users[j]->getSocket(), messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
 					break;
 				}
@@ -204,7 +204,7 @@ void Command::PrivMsg()
 						{
 							if (_user->getSocket() == vecUserInChannel[k].second)
 								continue;
-							std::string returnMessage = ":" + _user->getNickName();
+							std::string returnMessage = ":" + _user->getNickName(); // fixed
 							send(vecUserInChannel[k].second, messegeFromUser.c_str(), messegeFromUser.size(), IRC_NOSIGNAL);
 						}
 					}
@@ -248,7 +248,7 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
 	
-	send_("Join to channel complite!\n", _user->getSocket());
+	send_("Join to channel complite!\n", _user->getSocket()); // fixed
 }
 
 
