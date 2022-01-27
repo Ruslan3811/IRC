@@ -21,6 +21,7 @@
 #include "User.hpp"
 #include "Message.hpp"
 #include "Exception.hpp"
+#include "dop_function.hpp"
 #include "Channel.hpp"
 #ifdef __APPLE__
 #define IRC_NOSIGNAL SO_NOSIGPIPE

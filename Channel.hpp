@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <algorithm>
 
 class Channel
 {
@@ -39,6 +40,9 @@ public:
     std::string             getTopicChannel() const;
     bool                    getModerChannel() const;
     bool                    isPrivateChannel() const;
+
+    void                    eraseUserForInvaiteList(const std::string &);
+    void                    eraseUserForChannel(const std::string &, int fd);
 
 
     void                    setOnlyInvaite(bool);

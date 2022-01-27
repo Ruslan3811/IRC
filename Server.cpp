@@ -111,6 +111,12 @@ void Server::receivingMessages() {
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 					if (msg.size() != 0)
 					{
+						for (size_t i = 0; i < _channels.size(); ++i)
+						{
+							std::cout << _channels[i]->getChannelName() << std::endl;
+							printVectorPair(_channels[i]->getUserInChannel());
+							printVectorString(_channels[i]->getInviteListVec());
+						}
 						Message message(*(--msg.end()));
 						Command A(message, _UsersAccept[idx], _UsersAccept, _channels, _password);
 					}

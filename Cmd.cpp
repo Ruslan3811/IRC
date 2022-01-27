@@ -13,16 +13,6 @@ void send_(const std::string & msg, int soket)
 	send(soket, msg.c_str(), msg.size(), IRC_NOSIGNAL);
 }
 
-void printVectorStr(std::vector<std::string> & vec)
-{
-	for (size_t i = 0; i < vec.size(); ++i)
-	{
-		std::cout << vec[i] << " ";
-	}
-	std::cout << std::endl;
-}
-
-
 Channel * Command::findChannel_(const std::string & channel)
 {
 	for (size_t i = 0; i < _channels.size(); ++i)
@@ -251,6 +241,7 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 		if (passVec[iterPass] == channel->getPass())
 			channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
 	}
+	_user->pushChannelName(channelName);
 	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelName + "\n";
 	send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
 }
@@ -300,7 +291,7 @@ void Command::cmdJoin()
 			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
 			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
 			_channels.push_back(A);
-			_user->addOneChannelToUsersVectorChannel(A->getChannelName());
+			_user->pushChannelName(A->getChannelName());
 		}
 	}
 }
@@ -537,36 +528,33 @@ void Command::cmdMode()
 
 void Command::cmdKick()
 {
-	if (_msg.getParams().size() < 1)
+	Channel *channel = findChannel_(_msg.getParams()[0]);
+	if (_msg.getParams().size() < 2)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
-	else if (!isOperator(_msg.getParams()[1]) && !_msg.getPrefix().length())
-		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_CHANOPRIVSNEEDED);
-	else if (!onChannel(_msg.getParams()[0]))
-		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_NOTONCHANNEL);
-	else if (!findChannel_(_msg.getParams()[0]))
-		throw errorRequest(_msg.getParams()[0], _user->getNickName(), ERR_NOSUCHCHANNEL);
-	else if (findChannel_(_msg.getParams()[0])->getBanMask() != "" && _user->getNickName().find(findChannel_(_msg.getParams()[0])->getBanMask()) != std::string::npos)
-		throw errorRequest(findChannel_(_msg.getParams()[0])->getChannelName(), ERR_BADCHANMASK);
-	if (_msg.getPrefix().length() > 0)
+	std::string chan = _msg.getParams()[0];
+	std::string user = _msg.getParams()[1];
+	if (!isOperator(user) && !_msg.getPrefix().length())
+		throw errorRequest(user, _user->getNickName(), ERR_CHANOPRIVSNEEDED);
+	if (!onChannel(chan))
+		throw errorRequest(user, _user->getNickName(), ERR_NOTONCHANNEL);
+	if (!channel)
+		throw errorRequest(chan, _user->getNickName(), ERR_NOSUCHCHANNEL);
+	if (channel->getBanMask() != "" && _user->getNickName().find(channel->getBanMask()) != std::string::npos)
+		throw errorRequest(channel->getChannelName(), ERR_BADCHANMASK);
+	if (_msg.getTrailing().length() > 0)
 	{
-		send_("Kick " + _msg.getParams()[1] + " from " + _msg.getParams()[0] + "\n", findUser_(findChannel_(_msg.getParams()[0])->getHostName())->getSocket());
-		send_("You are kicked from " + _msg.getParams()[0] + "\n", findUser_(_msg.getParams()[0])->getSocket());
+		send_("Kick " + user + " from " +chan + "\n", findUser_(channel->getHostName())->getSocket());
+		send_("You are kicked from " + chan + "\n", findUser_(chan)->getSocket());
 	}
 	else
 	{
-		User *kicked_user = findUser_(_msg.getParams()[1]);
-		std::cout << kicked_user->getUserName();
-		kicked_user->eraseOneChannel(_msg.getParams()[0]);
-		// Channel *kick_from_channel = findChannel_(_msg.getParams()[0]);
-		// std::vector<std::pair<std::string, int > > tmp_vec = kick_from_channel->getUserInChannel();
-		// size_t i = 0;
-    	// while(i < tmp_vec.size())
-		// {
-        // 	if (tmp_vec[i].first == _msg.getParams()[1])
-        //     	tmp_vec.erase(tmp_vec.begin() + i);
-        // 	else
-        //     	i++;
-		// }
+		User *kicked_user = findUser_(user);
+		if (kicked_user == 0)
+			throw errorRequest(user, _user->getNickName(), ERR_CHANOPRIVSNEEDED);
+		kicked_user->eraseOneChannel(chan);
+		channel->eraseUserForChannel(user, findUser_(user)->getSocket());
+		channel->eraseUserForInvaiteList(user);
+
 		if (_msg.getTrailing().length() > 0)
 			send_(":" + _msg.getTrailing(), _user->getSocket());
 	}

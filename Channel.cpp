@@ -86,3 +86,17 @@ bool    Channel::isPrivateChannel() const
 {
     return _privateChannel;
 }
+
+void                    Channel::eraseUserForInvaiteList(const std::string & name)
+{
+    std::vector<std::string>::iterator it = std::find(_inviteListVec.begin(), _inviteListVec.end(), name);
+    if (it != _inviteListVec.end())
+        _inviteListVec.erase(it);
+}
+
+void                    Channel::eraseUserForChannel(const std::string & name, int id)
+{
+    std::vector<std::pair<std::string, int> >::iterator it = std::find(_usersVec.begin(), _usersVec.end(), std::make_pair(name, id));
+    if (it != _usersVec.end())
+        _usersVec.erase(it);
+}
