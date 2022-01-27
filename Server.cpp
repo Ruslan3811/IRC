@@ -42,10 +42,10 @@ Server::~Server() {
 		close((*it)->getSocket());
 		delete *it;
 	}
-	std::vector<Channel *>::iterator it = _channels.begin();
-	std::vector<Channel *>::iterator it2 = _channels.end();
-	for (; it != it2; ++it) {
-		delete *it;
+	std::vector<Channel *>::iterator it3 = _channels.begin();
+	std::vector<Channel *>::iterator it4 = _channels.end();
+	for (; it3 != it4; ++it) {
+		delete *it3;
 	}
 }
 
@@ -138,6 +138,24 @@ void Server::receivingMessages() {
 		}
 	}
 }
+
+// void Server::deleteNotActiveUsers() {
+// 	std::vector<User *>::iterator beg = _UsersAccept.begin();
+// 		std::vector<User *>::iterator end = _UsersAccept.end();
+// 		while (beg != end) {
+// 			std::cout << (*beg)->getSocket() << std::endl;
+// 			if ((*beg)->getActive() == false) {
+// 				close((*beg)->getSocket());
+// 				delete *beg;
+// 				_UsersAccept.erase(beg);
+// 				std::cout << 123 << std::endl;
+// 			}
+// 			else {
+// 				if (beg != end)
+// 					++beg;
+// 			}
+// 		}
+// }
 
 std::vector<User *> Server::getUsers()const
 {

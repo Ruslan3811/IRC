@@ -4,6 +4,7 @@ User::User(int socket, std::string host, std::string servername)
 : _socket(socket), _host(host), _password(""), _nickname(""), _username(""), _servername(servername), _realname("")
 {
 	_flag = 0;
+	_active = true;
 	_registered = false;
 }
 
@@ -27,6 +28,8 @@ int User::getFlag()const
 {
     return _flag;
 }
+
+bool User::getActive() const { return _active; }
 
 std::vector<std::string> & User::getAllChannel()
 {
@@ -110,7 +113,7 @@ int User::readMsg() {
 
 		// Wait for a message
 		int bytesRecv = recv(_socket, buf, 4096, 0);
-		if (bytesRecv >= 0) {
+		if (bytesRecv > 0) {
 			buf[bytesRecv] = 0;
 			msg += buf;
 			std::cout  << msg;
@@ -120,7 +123,8 @@ int User::readMsg() {
 				break;
 			}
 		}
-		if (bytesRecv < 0) {
+		if (bytesRecv <= 0) {
+			_active = false;
 			return (-1);
 		}
 	}

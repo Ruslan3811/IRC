@@ -51,6 +51,7 @@ class  Command
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
         void cmdKick();
+        void cmdPart();
         bool hasNickName(std::string param);
         bool onChannel(std::string channel);
         bool ClientOnChannel(std::string user, std::string channel);
