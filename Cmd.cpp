@@ -33,6 +33,8 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	(this->*(_command.at(msg.getCmd())))();
 }
 
+Command::~Command() {}
+
 void Command::checkConnection() {
 	if (_user->getNickName().size() > 0 && _user->getUserName().size() > 0) {
 		if (_servPass.size() == 0 || _user->getPassword() == _servPass) {
