@@ -292,9 +292,9 @@ void Command::cmdJoin()
 			A->pushUserInChannel(_user->getNickName(), _user->getSocket());
 			std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelsJoin[j] + "\n";
 			send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
-			responseForCommand_(channelsJoin[j], RPL_NOTOPIC, "");
-			responseForCommand_(channelsJoin[j], RPL_NAMREPLY, "");
-			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES, "");
+			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
+			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
+			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
 			_channels.push_back(A);
 			_user->pushChannelName(A->getChannelName());
 		}
@@ -310,7 +310,7 @@ void Command::responseForCommand_(const std::string & msg, int numResponse, cons
 			messege = ":" + _user->getServerName() + " 331 " + _user->getNickName() + " " + msg + " :No topic is set\n";
 			break;
 		case RPL_TOPIC:
-			messege = ":" + _user->getServerName() + " 332 " + _user->getNickName() + " " + msg + " :" + arg1	 + "\n";
+			messege = ":" + _user->getServerName() + " 332 " + _user->getNickName() + " " + msg + " :" + arg1 + "\n";
 			break;
 		case RPL_NAMREPLY:
 			messege = ":" + _user->getServerName() + " 353 " + _user->getNickName() + " = " + msg + " :@" + _user->getNickName() + "\n";
@@ -341,11 +341,11 @@ void Command::cmdAway()
 	{
 		_user->setAwayFlag(1);
 		_user->setAwayStatus(_msg.getTrailing());
-		responseForCommand_("", RPL_NOWAWAY, "");
+		responseForCommand_("", RPL_NOWAWAY);
 		return ;
 	}
 	_user->setAwayFlag(0);
-	responseForCommand_("", RPL_UNAWAY, "");
+	responseForCommand_("", RPL_UNAWAY);
 	return;
 }
 
@@ -446,8 +446,8 @@ void Command::cmdInvite()
 	else if (!isOperator(_msg.getParams()[1]))
 		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_CHANOPRIVSNEEDED);
 	if (userAwayFlag(_msg.getParams()[0]).length() > 0)
-		responseForCommand_(_msg.getParams()[0] + " :" + userAwayFlag(_msg.getParams()[0]), RPL_AWAY, "");
-	responseForCommand_(_msg.getParams()[1] + " " + _msg.getParams()[0], RPL_INVITING, "");
+		responseForCommand_(_msg.getParams()[0] + " :" + userAwayFlag(_msg.getParams()[0]), RPL_AWAY);
+	responseForCommand_(_msg.getParams()[1] + " " + _msg.getParams()[0], RPL_INVITING);
 	Channel *ch = findChannel_(_msg.getParams()[1]);
 	ch->pushInviteListVec(_msg.getParams()[0]);
 }
@@ -628,8 +628,8 @@ void Command::cmdNames()
 				msg += (*iter_begin).first + ",";
 			msg.erase(msg.length()-1);
 			msg = (*begin)->getChannelName() + " :" + msg;
-			responseForCommand_(msg, RPL_NAMREPLY, "");
-			responseForCommand_((*begin)->getChannelName(), RPL_ENDOFNAMES, "");
+			responseForCommand_(msg, RPL_NAMREPLY);
+			responseForCommand_((*begin)->getChannelName(), RPL_ENDOFNAMES);
 		}
 	}
 }
@@ -640,11 +640,18 @@ void Command::cmdTopic() {
 		throw errorRequest(_msg.getParams()[0], ERR_NOTONCHANNEL);
 	else {
 		Channel *chan = findChannel_(_msg.getParams()[0]);
+		if (isOperator(_msg.getParams()[0]) == false)
+			throw errorRequest(_msg.getCmd(), ERR_CHANOPRIVSNEEDED);
 		if (_msg.getParams().size() == 2)
 			chan->setTopicChannel(_msg.getParams()[1]);
-		else
+		else if (_msg.getParams().size() == 1 && _msg.getTrailing().size() != 0)
 			chan->setTopicChannel(_msg.getTrailing());
-		responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
+		if (chan->getTopicChannel().size() == 0){
+			std::cout << chan->getTopicChannel() << std::endl;
+			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, "No topic is set");
+		}
+		else
+			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
 	}
 // ERR_CHANOPRIVSNEEDED You're not channel operator
 }
