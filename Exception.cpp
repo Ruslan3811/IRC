@@ -10,7 +10,7 @@ std::string errorRequest::_getErrorMessage(int codeError)
 		case ERR_NOSUCHSERVER:
 			return _msg + " :No such server\n";
 		case ERR_NOSUCHCHANNEL:
-			return _msg + ":No such channel\n";
+			return _msg + " :No such channel\n";
 		case ERR_CANNOTSENDTOCHAN:
 			return _msg + " :Cannot send to channel\n";
 		case ERR_TOOMANYCHANNELS:
