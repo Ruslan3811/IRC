@@ -53,6 +53,7 @@ class  Command
         void cmdJoin(void);
         void cmdKick();
         void cmdPart();
+        void cmdNames();
         bool hasNickName(std::string param);
         bool onChannel(std::string channel);
         bool ClientOnChannel(std::string user, std::string channel);

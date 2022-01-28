@@ -37,6 +37,7 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["MODE"] = &Command::cmdMode;
 	_command["KICK"] = &Command::cmdKick;
 	_command["PART"] = &Command::cmdPart;
+	_command["NAMES"] = &Command::cmdNames;
 
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
@@ -600,4 +601,37 @@ void Command::cmdPart() {
 void Command::cmdTopic()
 {
 
+}
+
+void Command::cmdNames()
+{
+	std::vector<Channel *> chans;
+	if (_msg.getParams().size() == 0)
+		chans = _channels;
+	else
+	{ 
+		std::vector<std::string> vec_chan = split(_msg.getParams()[0], ",");
+		std::vector<std::string>::iterator begin = vec_chan.begin();
+		std::vector<std::string>::iterator end = vec_chan.end();
+		for(; begin != end; ++begin)
+			chans.push_back(findChannel_(*begin));
+	}
+	std::vector<Channel *>::iterator begin = chans.begin();
+	std::vector<Channel *>::iterator end = chans.end();
+	for (;begin != end; ++begin)
+	{
+		if (!(*begin)->isPrivateChannel() && !(*begin)->isSecretChannel() && !onChannel((*begin)->getChannelName()))
+		{
+			std::string msg = "";
+			std::vector<std::pair <std::string, int> >::iterator iter_begin = (*begin)->getUserInChannel().begin();
+			std::vector<std::pair <std::string, int> >::iterator iter_end = (*begin)->getUserInChannel().end();
+			std::cout << "SIZE: " << (*begin)->getUserInChannel().size() << "\n";
+			for (;iter_begin != iter_end; ++iter_begin)
+				msg += (*iter_begin).first + ",";
+			msg.erase(msg.length()-1);
+			msg = (*begin)->getChannelName() + " :" + msg;
+			responseForCommand_(msg, RPL_NAMREPLY);
+			responseForCommand_((*begin)->getChannelName(), RPL_ENDOFNAMES);
+		}
+	}
 }

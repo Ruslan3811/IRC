@@ -42,6 +42,7 @@ public:
     std::string             getTopicChannel() const;
     bool                    getModerChannel() const;
     bool                    isPrivateChannel() const;
+    bool                    isSecretChannel() const;
 
     void                    eraseUserForInvaiteList(const std::string &);
     void                    eraseUserForChannel(const std::string &, int fd);

@@ -102,3 +102,8 @@ void                    Channel::eraseUserForChannel(const std::string & name, i
     if (it != _usersVec.end())
         _usersVec.erase(it);
 }
+
+bool                    Channel::isSecretChannel() const
+{
+    return _secretChannel;
+}
