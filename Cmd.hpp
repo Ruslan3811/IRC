@@ -9,6 +9,7 @@
 class Message;
 class User;
 class Command;
+class Channel;
 
 enum
 {
@@ -16,7 +17,8 @@ enum
     RPL_UNAWAY = 305,
     RPL_NOWAWAY = 306,
     RPL_NOTOPIC = 331, //       "<channel> :No topic is set"
-    
+    RPL_TOPIC = 332,
+
     RPL_INVITING = 341,
     RPL_NAMREPLY = 353, //      "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
     RPL_ENDOFNAMES = 366, //    "<channel> :End of /NAMES list"
@@ -48,7 +50,7 @@ class  Command
         void cmdNotice(void);
         void cmdAway(void);
         void cmdInvite(void);
-        void cmdTopic();
+        void cmdTopic(void);
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
         void cmdKick();
@@ -62,8 +64,9 @@ class  Command
     private:
         Channel * findChannel_(const std::string & channel);
         User    * findUser_(const std::string & name);
-        void responseForCommand_(const std::string & msg, int numResponse) const;
+        void responseForCommand_(const std::string & msg, int numResponse, const std::string &arg1) const;
         void createChannel_();
         void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
         void    addToChannel(std::string user, std::string channel);
+
 };

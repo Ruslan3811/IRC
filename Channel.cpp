@@ -6,7 +6,7 @@ Channel::Channel(const std::string & channelName)
 :  _channelName(channelName), _countUser(300), _onlyInvaite(false), _hasPass(false), _secretChannel(false), \
  _privateChannel(false), _moderChannel(false)
 {
-    _topicChannel = "";
+    _topicChannel = "No topic is set";
 }
 
 Channel::Channel(const std::string & channelName, const std::string & channelPass,const std::string & userName) 
