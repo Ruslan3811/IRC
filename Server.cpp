@@ -140,23 +140,19 @@ void Server::receivingMessages() {
 	}
 }
 
-// void Server::deleteNotActiveUsers() {
-// 	std::vector<User *>::iterator beg = _UsersAccept.begin();
-// 		std::vector<User *>::iterator end = _UsersAccept.end();
-// 		while (beg != end) {
-// 			std::cout << (*beg)->getSocket() << std::endl;
-// 			if ((*beg)->getActive() == false) {
-// 				close((*beg)->getSocket());
-// 				delete *beg;
-// 				_UsersAccept.erase(beg);
-// 				std::cout << 123 << std::endl;
-// 			}
-// 			else {
-// 				if (beg != end)
-// 					++beg;
-// 			}
-// 		}
-// }
+void Server::deleteNotActiveUsers() {
+	std::vector<User *>::iterator beg = _UsersAccept.begin();
+		std::vector<User *>::iterator end = _UsersAccept.end();
+		while (beg != end) {
+			if ((*beg)->getActive() == false) {
+				close((*beg)->getSocket());
+				delete *beg;
+				_UsersAccept.erase(beg);
+				break;
+			}
+			++beg;
+		}
+}
 
 std::vector<User *> Server::getUsers()const
 {
