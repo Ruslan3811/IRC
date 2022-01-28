@@ -110,25 +110,19 @@ void Server::receivingMessages() {
 				{
 					_UsersAccept[idx]->setFlag(-1);
 				}
-
 				try
 				{
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 					if (msg.size() != 0)
 					{
-						for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end();)
-						{
-							if ((*it)->getCountUser() == 0)
-								_channels.erase(it);
-							else
-								++it;
-						}
 						for (size_t i = 0; i < _channels.size(); ++i)
 						{
-							std::cout << _channels[i]->getChannelName() << " pass: " << _channels[i]->getPass() << "|" << std::endl;
+							std::cout << _channels[i]->getChannelName() << std::endl;
 							printVectorPair(_channels[i]->getUserInChannel());
 							printVectorString(_channels[i]->getInviteListVec());
+							// if ()
 						}
+
 						Message message(*(--msg.end()));
 						Command A(message, _UsersAccept[idx], _UsersAccept, _channels, _password);
 					}
