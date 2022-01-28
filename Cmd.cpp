@@ -35,6 +35,7 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["AWAY"] = &Command::cmdAway;
 	_command["INVITE"] = &Command::cmdInvite;
 	_command["MODE"] = &Command::cmdMode;
+	_command["TOPIC"] = &Command::cmdTopic;
 	_command["KICK"] = &Command::cmdKick;
 	_command["PART"] = &Command::cmdPart;
 	_command["NAMES"] = &Command::cmdNames;
@@ -301,13 +302,16 @@ void Command::cmdJoin()
 	}
 }
 
-void Command::responseForCommand_(const std::string & msg, int numResponse) const
+void Command::responseForCommand_(const std::string & msg, int numResponse, const std::string &arg1) const
 {
 	std::string messege;
 	switch (numResponse)
 	{
 		case RPL_NOTOPIC:
 			messege = ":" + _user->getServerName() + " 331 " + _user->getNickName() + " " + msg + " :No topic is set\n";
+			break;
+		case RPL_TOPIC:
+			messege = ":" + _user->getServerName() + " 332 " + _user->getNickName() + " " + msg + " :" + arg1 + "\n";
 			break;
 		case RPL_NAMREPLY:
 			messege = ":" + _user->getServerName() + " 353 " + _user->getNickName() + " = " + msg + " :@" + _user->getNickName() + "\n";
@@ -607,12 +611,6 @@ void Command::cmdPart() {
 	send_(returnMessage, _user->getSocket());
 }
 
-
-void Command::cmdTopic()
-{
-
-}
-
 void Command::cmdNames()
 {
 	std::vector<Channel *> chans;
@@ -681,10 +679,32 @@ void Command::cmdList()
 			continue;
 		else if ((*begin)->isPrivateChannel() && !onChannel((*begin)->getChannelName()))
 			responseForCommand_((*begin)->getChannelName() + " Prv ", RPL_LIST);
-		// else
-			// responseForCommand_((*begin)->getChannelName() + " " + (*begin)->getTopic(), RPL_LIST);	
+		else
+			responseForCommand_((*begin)->getChannelName() + " " + (*begin)->getTopicChannel(), RPL_LIST);	
 	}
 	responseForCommand_("", RPL_LISTEND);
 
 
+}
+void Command::cmdTopic() {
+	if (_msg.getParams().size() < 1)
+		throw errorRequest(_msg.getCmd(), ERR_NEEDMOREPARAMS);
+	else if (!onChannel(_msg.getParams()[0]))
+		throw errorRequest(_msg.getParams()[0], ERR_NOTONCHANNEL);
+	else {
+		Channel *chan = findChannel_(_msg.getParams()[0]);
+		if (isOperator(_msg.getParams()[0]) == false)
+			throw errorRequest(_msg.getCmd(), ERR_CHANOPRIVSNEEDED);
+		if (_msg.getParams().size() == 2)
+			chan->setTopicChannel(_msg.getParams()[1]);
+		else if (_msg.getParams().size() == 1 && _msg.getTrailing().size() != 0)
+			chan->setTopicChannel(_msg.getTrailing());
+		if (chan->getTopicChannel().size() == 0){
+			std::cout << chan->getTopicChannel() << std::endl;
+			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, "No topic is set");
+		}
+		else
+			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
+	}
+// ERR_CHANOPRIVSNEEDED You're not channel operator
 }

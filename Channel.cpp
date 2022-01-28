@@ -32,6 +32,8 @@ std::vector<std::string> &Channel::getInviteListVec() { return _inviteListVec; }
 
 std::vector<std::pair<std::string, int > > &Channel::getUserInChannel() { return _usersVec; }
 
+std::string             Channel::getTopicChannel() const { return _topicChannel; }
+
 // Setters
 
 void                    Channel::setOnlyInvaite(bool b) { _onlyInvaite = b; }
@@ -48,6 +50,8 @@ void	Channel::pushBanListVec(const std::string & nickname) { _banListVec.push_ba
 void	Channel::pushInviteListVec(const std::string & nickname) { _inviteListVec.push_back(nickname); }
 
 void	Channel::pushUserInChannel(const std::string & nickName, int soket) { _usersVec.push_back(std::make_pair(nickName, soket)); }
+
+void    Channel::setTopicChannel(const std::string & topic) { _topicChannel = topic; }
 
 void    Channel::setHostName(const std::string &hostname)
 {
