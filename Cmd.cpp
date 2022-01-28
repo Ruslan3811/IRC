@@ -38,6 +38,7 @@ Command::Command(const Message & msg, User * user, std::vector<User *> & users, 
 	_command["KICK"] = &Command::cmdKick;
 	_command["PART"] = &Command::cmdPart;
 	_command["NAMES"] = &Command::cmdNames;
+	_command["LIST"] = &Command::cmdList;
 
 
 	if (user->getRegistered() == false && msg.getCmd() != "PASS" && msg.getCmd() != "NICK" && msg.getCmd() != "USER")
@@ -315,16 +316,25 @@ void Command::responseForCommand_(const std::string & msg, int numResponse) cons
 			messege = ":" + _user->getServerName() + " 366 " + _user->getNickName() + " " + msg + " :End of /NAMES list\n";
 			break;
 		case RPL_NOWAWAY:
-			messege = msg + ":You have been marked as being away\n";
+			messege = ":" + _user->getServerName() + " 306 " + _user->getNickName() + " " + msg + ":You have been marked as being away\n";
 			break;
 		case RPL_UNAWAY:
-			messege = msg + ":You are no longer marked as being away\n";
+			messege = ":" + _user->getServerName() + " 305 " + _user->getNickName() + " " + msg + ":You are no longer marked as being away\n";
 			break;
 		case RPL_AWAY:
-			messege = msg + "\n";
+			messege = ":" + _user->getServerName() + " 301 " + _user->getNickName() + " " + msg + "\n";
 			break;
 		case RPL_INVITING:
-			messege = msg + "\n";
+			messege = ":" + _user->getServerName() + " 341 " + _user->getNickName() + " " + msg + "\n";
+			break;
+		case RPL_LISTSTART:
+			messege = ":" + _user->getServerName() + " 321 " + _user->getNickName() + " " + msg + "Channel :Users  Name" + "\n";;
+			break;
+		case RPL_LIST:
+			messege = ":" + _user->getServerName() + " 322 " + _user->getNickName() + " " + msg + "\n";;
+			break;
+		case RPL_LISTEND:
+			messege = ":" + _user->getServerName() + " 323 " + _user->getNickName() + " " + msg + ":End of /LIST" + "\n";;
 			break;
 
 	}
@@ -614,7 +624,10 @@ void Command::cmdNames()
 		std::vector<std::string>::iterator begin = vec_chan.begin();
 		std::vector<std::string>::iterator end = vec_chan.end();
 		for(; begin != end; ++begin)
-			chans.push_back(findChannel_(*begin));
+		{
+			if (findChannel_(*begin))
+				chans.push_back(findChannel_(*begin));
+		}
 	}
 	std::vector<Channel *>::iterator begin = chans.begin();
 	std::vector<Channel *>::iterator end = chans.end();
@@ -634,4 +647,44 @@ void Command::cmdNames()
 			responseForCommand_((*begin)->getChannelName(), RPL_ENDOFNAMES);
 		}
 	}
+}
+
+std::vector<Channel *> &Command::getAllChannels()const
+{
+	return _channels;
+}
+
+void Command::cmdList()
+{
+	std::vector<Channel *> channels;
+	if (_msg.getTrailing().length() == 0)
+	{
+		channels =  getAllChannels();
+	}
+	else
+	{
+		std::vector<std::string> channels_str = split(_msg.getParams()[0], ",");;
+		std::vector<std::string>::iterator begin = channels_str.begin();
+		std::vector<std::string>::iterator end = channels_str.end();
+		for (;begin != end; ++begin)
+		{
+			if (findChannel_(*begin))
+				channels.push_back(findChannel_(*begin));
+		}
+	}
+	responseForCommand_("", RPL_LISTSTART);
+	std::vector<Channel *>::iterator begin = channels.begin();
+	std::vector<Channel *>::iterator end = channels.end();
+	for (;begin != end; ++begin)
+	{
+		if ((*begin)->isSecretChannel())
+			continue;
+		else if ((*begin)->isPrivateChannel() && !onChannel((*begin)->getChannelName()))
+			responseForCommand_((*begin)->getChannelName() + " Prv ", RPL_LIST);
+		// else
+			// responseForCommand_((*begin)->getChannelName() + " " + (*begin)->getTopic(), RPL_LIST);	
+	}
+	responseForCommand_("", RPL_LISTEND);
+
+
 }

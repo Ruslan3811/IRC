@@ -15,8 +15,10 @@ enum
     RPL_AWAY = 301,
     RPL_UNAWAY = 305,
     RPL_NOWAWAY = 306,
+    RPL_LISTSTART = 321,
+    RPL_LIST = 322,
+    RPL_LISTEND = 323,
     RPL_NOTOPIC = 331, //       "<channel> :No topic is set"
-    
     RPL_INVITING = 341,
     RPL_NAMREPLY = 353, //      "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
     RPL_ENDOFNAMES = 366, //    "<channel> :End of /NAMES list"
@@ -54,11 +56,13 @@ class  Command
         void cmdKick();
         void cmdPart();
         void cmdNames();
+        void cmdList();
         bool hasNickName(std::string param);
         bool onChannel(std::string channel);
         bool ClientOnChannel(std::string user, std::string channel);
         bool isOperator(std::string channel);
         std::string userAwayFlag(std::string user);
+        std::vector<Channel *> &getAllChannels()const;
     private:
         Channel * findChannel_(const std::string & channel);
         User    * findUser_(const std::string & name);
