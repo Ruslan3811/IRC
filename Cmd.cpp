@@ -440,14 +440,11 @@ void Command::cmdInvite()
 		throw errorRequest(_msg.getParams()[0] + " " + _msg.getParams()[1], ERR_USERONCHANNEL);
 	else if (!isOperator(_msg.getParams()[1]))
 		throw errorRequest(_msg.getParams()[1], _user->getNickName(), ERR_CHANOPRIVSNEEDED);
-	if (findChannel_(_msg.getParams()[1])->getOnlyInvaite())
-	{
-		if (userAwayFlag(_msg.getParams()[0]).length() > 0)
-			responseForCommand_(_msg.getParams()[0] + " :" + userAwayFlag(_msg.getParams()[0]), RPL_AWAY);
-		responseForCommand_(_msg.getParams()[1] + " " + _msg.getParams()[0], RPL_INVITING);
-		Channel *ch = findChannel_(_msg.getParams()[1]);
-		ch->pushInviteListVec(_msg.getParams()[0]);
-	}
+	if (userAwayFlag(_msg.getParams()[0]).length() > 0)
+		responseForCommand_(_msg.getParams()[0] + " :" + userAwayFlag(_msg.getParams()[0]), RPL_AWAY);
+	responseForCommand_(_msg.getParams()[1] + " " + _msg.getParams()[0], RPL_INVITING);
+	Channel *ch = findChannel_(_msg.getParams()[1]);
+	ch->pushInviteListVec(_msg.getParams()[0]);
 }
 
 //NICKNAME
