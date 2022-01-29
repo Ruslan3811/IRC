@@ -249,6 +249,9 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 	_user->pushChannelName(channelName);
 	std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelName + "\n";
 	send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
+	printTopic(channel);
+	printUsersInChannel(channel);
+	responseForCommand_(channel->getChannelName(), RPL_ENDOFNAMES);
 }
 
 void Command::cmdJoin()
@@ -293,13 +296,23 @@ void Command::cmdJoin()
 			A->pushUserInChannel(_user->getNickName(), _user->getSocket());
 			std::string returnMessage = ":" + _user->getNickName() + "!" + _user->getUserName() + "@" + _user->getHostName() + " JOIN: " + channelsJoin[j] + "\n";
 			send(_user->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
-			responseForCommand_(channelsJoin[j], RPL_NOTOPIC);
-			responseForCommand_(channelsJoin[j], RPL_NAMREPLY);
+			printTopic(A);
+			printUsersInChannel(A);
 			responseForCommand_(channelsJoin[j], RPL_ENDOFNAMES);
 			_channels.push_back(A);
 			_user->pushChannelName(A->getChannelName());
 		}
 	}
+}
+
+void Command::printUsersInChannel(Channel *chan) {
+	std::vector<std::pair<std::string, int > > users = chan->getUserInChannel();
+	std::vector<std::pair<std::string, int > >::iterator it = users.begin();
+	std::vector<std::pair<std::string, int > >::iterator it2 = users.end();
+	std::string userPrint;
+	for (; it != it2; ++it)
+		userPrint += (*it).first + " ";
+	responseForCommand_(chan->getChannelName(), RPL_NAMREPLY, userPrint);
 }
 
 void Command::responseForCommand_(const std::string & msg, int numResponse, const std::string &arg1) const
@@ -314,7 +327,7 @@ void Command::responseForCommand_(const std::string & msg, int numResponse, cons
 			messege = ":" + _user->getServerName() + " 332 " + _user->getNickName() + " " + msg + " :" + arg1 + "\n";
 			break;
 		case RPL_NAMREPLY:
-			messege = ":" + _user->getServerName() + " 353 " + _user->getNickName() + " = " + msg + " :@" + _user->getNickName() + "\n";
+			messege = ":" + _user->getServerName() + " 353 " + _user->getNickName() + " = " + msg + " :@" + arg1 + "\n";
 			break;
 		case RPL_ENDOFNAMES:
 			messege = ":" + _user->getServerName() + " 366 " + _user->getNickName() + " " + msg + " :End of /NAMES list\n";
@@ -679,9 +692,15 @@ void Command::cmdList()
 			responseForCommand_((*begin)->getChannelName() + " " + (*begin)->getTopicChannel(), RPL_LIST);	
 	}
 	responseForCommand_("", RPL_LISTEND);
-
-
 }
+
+void Command::printTopic(Channel *chan) {
+	if (chan->getTopicChannel().size() == 0)
+		responseForCommand_(_msg.getParams()[0], RPL_NOTOPIC);
+	else
+		responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
+}
+
 void Command::cmdTopic() {
 	if (_msg.getParams().size() < 1)
 		throw errorRequest(_msg.getCmd(), ERR_NEEDMOREPARAMS);
@@ -695,12 +714,6 @@ void Command::cmdTopic() {
 			chan->setTopicChannel(_msg.getParams()[1]);
 		else if (_msg.getParams().size() == 1 && _msg.getTrailing().size() != 0)
 			chan->setTopicChannel(_msg.getTrailing());
-		if (chan->getTopicChannel().size() == 0){
-			std::cout << chan->getTopicChannel() << std::endl;
-			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, "No topic is set");
-		}
-		else
-			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
+		printTopic(chan);
 	}
-// ERR_CHANOPRIVSNEEDED You're not channel operator
 }

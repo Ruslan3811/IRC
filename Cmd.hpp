@@ -54,6 +54,8 @@ class  Command
         void cmdAway(void);
         void cmdInvite(void);
         void cmdTopic(void);
+        void printTopic(Channel *chan);
+        void printUsersInChannel(Channel *chan);
         std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
         void cmdKick();
