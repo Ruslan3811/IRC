@@ -20,6 +20,7 @@ private:
     bool                        _secretChannel;
     bool                        _privateChannel;
     bool                        _moderChannel;
+    bool                        _topicChangeOnlyModer;
     std::string                 _banMask;
 
 public:
@@ -30,6 +31,9 @@ public:
     std::size_t     getCountUserCanJoin() const;
 
     std::string                 getChannelName() const;
+    bool                        getTopicChangeOnlyModer() const;
+    void                        setTopicChangeOnlyModer(bool);
+
     std::size_t                 getCountUser() const;
     std::string                 getPass() const;
     std::string                 getBanMask() const;

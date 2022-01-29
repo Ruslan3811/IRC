@@ -531,6 +531,8 @@ void Command::cmdMode()
 		case 't':
 			if (channel->getOnlyInvaite() == true && _user->getNickName() != channel->getHostName())
 				throw errorRequest(_user->getNickName(), ERR_CHANOPRIVSNEEDED);
+			channel->setTopicChangeOnlyModer(operation);
+			send_("Set topic channel!\n", _user->getSocket());
 			break;
 		case 'm':
 			channel->setModerChannel(operation);
