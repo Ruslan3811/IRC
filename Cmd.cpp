@@ -816,5 +816,4 @@ void Command::cmdTopic() {
 		else
 			responseForCommand_(_msg.getParams()[0], RPL_TOPIC, chan->getTopicChannel());
 	}
-// ERR_CHANOPRIVSNEEDED You're not channel operator
 }
