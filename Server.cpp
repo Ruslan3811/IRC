@@ -118,7 +118,10 @@ void Server::receivingMessages() {
 							if ((*it)->getCountUser() == 0)
 								_channels.erase(it);
 							else
+							{
+								(*it)->setHostName((*it)->getUserInChannel()[0].first);
 								++it;
+							}
 						}
 						for (size_t i = 0; i < _channels.size(); ++i)
 						{

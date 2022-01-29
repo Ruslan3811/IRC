@@ -73,5 +73,6 @@ class  Command
         void createChannel_();
         void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
         void    addToChannel(std::string user, std::string channel);
+        void    userMode_(User *user, std::vector<std::string> & param);
 
 };

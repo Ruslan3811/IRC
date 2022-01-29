@@ -132,19 +132,20 @@ void Command::cmdNick()
 
 void Command::PrivMsg()
 {
-	std::vector<std::string> param = _msg.getParams();
-	std::vector<std::pair<std::string, bool> > userAndChanel;
 	std::string	messegeFromUser = _msg.getTrailing() + "\n";
-	if (param.size() < 1)
+	if (_msg.getParams().size() < 1)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
-	for (size_t i = 0; i < param.size(); ++i)
+	std::vector<std::string> userChannel = split(_msg.getParams()[0], ",");
+	std::vector<std::pair<std::string, bool> > userAndChanel;
+
+	for (size_t i = 0; i < userChannel.size(); ++i)
 	{
 		bool userExist = false;
 		for (size_t j = 0; j < _users.size(); ++j)
 		{
-			if (_users[j]->getNickName() == param[i])
+			if (_users[j]->getNickName() == userChannel[i])
 			{
-				userAndChanel.push_back(std::make_pair(param[i], true));
+				userAndChanel.push_back(std::make_pair(userChannel[i], true));
 				userExist = true;
 				break;
 			}
@@ -153,9 +154,9 @@ void Command::PrivMsg()
 			continue;
 		for (size_t j = 0; j < _channels.size(); ++j)
 		{
-			if (_channels[j]->getChannelName() == param[i])
+			if (_channels[j]->getChannelName() == userChannel[i])
 			{
-				userAndChanel.push_back(std::make_pair(param[i], false));
+				userAndChanel.push_back(std::make_pair(userChannel[i], false));
 				userExist = true;
 				break;
 			}
@@ -164,11 +165,13 @@ void Command::PrivMsg()
 			continue;
 		if (userExist == false && i == 0)
 		{
-			throw errorRequest(param[i], _user->getNickName(), ERR_NOSUCHNICK);
+			throw errorRequest(userChannel[i], _user->getNickName(), ERR_NOSUCHNICK);
 		}
 		else if (userExist == false)
 		{
-			messegeFromUser = param[i] + "\n";
+			if (_msg.getParams().size() < 2)
+				throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+			messegeFromUser = _msg.getParams()[1] + "\n";
 			break;
 		}
 	}
@@ -182,6 +185,11 @@ void Command::PrivMsg()
 				{
 					std::string returnMessage = "From: " + _user->getNickName() + " To: " + _users[j]->getNickName() + " PRIVMSG: " + messegeFromUser;
 					send(_users[j]->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
+					if (_users[j]->getAwayStatus() != "" && _user->getAwayMassageStatus() == false)
+					{
+						std::string msgAway = "Away from" + _users[j]->getNickName() + ":" + _users[j]->getAwayStatus() + "\n";
+						send_(msgAway, _user->getSocket());
+					}
 					break;
 				}
 			}
@@ -349,19 +357,96 @@ void Command::cmdAway()
 {
 	if (_msg.getTrailing().size() > 0)
 	{
-		_user->setAwayFlag(1);
 		_user->setAwayStatus(_msg.getTrailing());
 		responseForCommand_("", RPL_NOWAWAY);
 		return ;
 	}
-	_user->setAwayFlag(0);
 	responseForCommand_("", RPL_UNAWAY);
 	return;
 }
 
 void Command::cmdNotice()
 {
-	PrivMsg();
+	std::string	messegeFromUser = _msg.getTrailing() + "\n";
+	if (_msg.getParams().size() < 1)
+		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+	std::vector<std::string> userChannel = split(_msg.getParams()[0], ",");
+	std::vector<std::pair<std::string, bool> > userAndChanel;
+
+	for (size_t i = 0; i < userChannel.size(); ++i)
+	{
+		bool userExist = false;
+		for (size_t j = 0; j < _users.size(); ++j)
+		{
+			if (_users[j]->getNickName() == userChannel[i])
+			{
+				userAndChanel.push_back(std::make_pair(userChannel[i], true));
+				userExist = true;
+				break;
+			}
+		}
+		if (userExist)
+			continue;
+		for (size_t j = 0; j < _channels.size(); ++j)
+		{
+			if (_channels[j]->getChannelName() == userChannel[i])
+			{
+				userAndChanel.push_back(std::make_pair(userChannel[i], false));
+				userExist = true;
+				break;
+			}
+		}
+		if (userExist)
+			continue;
+		if (userExist == false && i == 0)
+		{
+			throw errorRequest(userChannel[i], _user->getNickName(), ERR_NOSUCHNICK);
+		}
+		else if (userExist == false)
+		{
+			if (_msg.getParams().size() < 2)
+				throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
+			messegeFromUser = _msg.getParams()[1] + "\n";
+			break;
+		}
+	}
+	for (size_t i = 0; i < userAndChanel.size(); ++i)
+	{
+		if (userAndChanel[i].second == true)
+		{
+			for (size_t j = 0; j < _users.size(); ++j)	
+			{
+				if (_users[j]->getNickName() == userAndChanel[i].first)
+				{
+					std::string returnMessage = "From: " + _user->getNickName() + " To: " + _users[j]->getNickName() + " PRIVMSG: " + messegeFromUser;
+					send(_users[j]->getSocket(), returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
+					break;
+				}
+			}
+		}
+		if (userAndChanel[i].second == false)
+		{
+			for (size_t j = 0; j < _channels.size(); ++j)
+			{
+				if (userAndChanel[i].first == _channels[j]->getChannelName())
+				{
+					printNum();
+					std::vector<std::pair <std::string, int> > vecUserInChannel = _channels[j]->getUserInChannel();
+					if (find(vecUserInChannel.begin(), vecUserInChannel.end(), std::make_pair(_user->getNickName(), _user->getSocket()))
+					 != vecUserInChannel.end())
+					{
+						for (size_t k = 0; k < vecUserInChannel.size(); ++k)
+						{
+							if (_user->getSocket() == vecUserInChannel[k].second)
+								continue;
+							std::string returnMessage = "From: " + _channels[j]->getChannelName() + ", " + _user->getNickName() + " To: " + vecUserInChannel[k].first + " PRIVMSG: " + messegeFromUser;
+							send(vecUserInChannel[k].second, returnMessage.c_str(), returnMessage.size(), IRC_NOSIGNAL);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 bool Command::hasNickName(std::string param)
@@ -464,6 +549,28 @@ void Command::cmdInvite()
 
 //NICKNAME
 //Active
+void Command::userMode_(User *user, std::vector<std::string> & param)
+{
+	for (size_t i = 0; i < param[1].size(); ++i)
+	{
+		bool	operation = true;
+		switch (param[1][i])
+		{
+		case '+':
+			operation = true;
+			break;
+		case '-':
+			operation = false;
+			break;
+		case 's':
+			user->setAwayMassageStatus(operation);
+			operation = false;
+			break;
+		default:
+			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
+		}
+	}
+}
 
 void Command::cmdMode()
 {
@@ -474,11 +581,16 @@ void Command::cmdMode()
 	if (param.size() < countParam)
 		throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
 	Channel * channel = findChannel_(param[0]);
-	if (channel == 0)
+	User *user = findUser_(param[0]);
+	if (channel == 0 && user == 0)
 		throw errorRequest(param[0], ERR_NOTONCHANNEL);
+	if (user != 0)
+	{
+		userMode_(user, param);
+		return;
+	}
 	if (_user->getNickName() != channel->getHostName())
 		throw errorRequest(_user->getNickName(), ERR_USERSDONTMATCH);
-	User * user;
 	for (size_t i = 0; i < param[1].size(); ++i)
 	{
 		if (param[1][i] == 'l' || param[1][i] == 'b' || param[1][i] == 'o' || param[1][i] == 'o')
