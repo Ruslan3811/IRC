@@ -584,10 +584,6 @@ void Command::cmdPart() {
 	std::vector<std::string>::iterator it = channels.begin();
 	std::vector<std::string>::iterator it2 = channels.end();
 	std::vector<std::string> vec_ch;
-	// for (size_t i; i < _user->getAllChannel().size(); ++i) {
-	// 	std::cout << _user->getAllChannel()[i] << " ";
-	// }
-	// std::cout << std::endl;
 	for (; it != it2; ++it) {
 		if (!onChannel(*it))
 			throw errorRequest(*it, ERR_NOTONCHANNEL);
