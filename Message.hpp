@@ -13,14 +13,13 @@ public:
     Message(const std::string str);
     ~Message();
 
-    std::vector<std::string> getParams(void) const;
-    void setParam(std::string param);
+    std::vector<std::string>    getParams(void) const;
+    std::string                 getCmd(void) const;
+    std::string                 &getTrailing();
+    std::string                 &getPrefix();
     
-    std::string getCmd(void) const;
-    void setCmd(std::string cmd);
-
-    std::string &getTrailing();
-    std::string &getPrefix();
+    void        setCmd(std::string cmd);
+    void        setParam(std::string param);
 };
 
 // Alena
