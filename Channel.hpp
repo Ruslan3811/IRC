@@ -28,29 +28,28 @@ public:
     Channel(const std::string & channelName, const std::string & channelPass, const std::string & userName);
     ~Channel();
 
-    std::size_t     getCountUserCanJoin() const;
 
-    std::string                 getChannelName() const;
-    bool                        getTopicChangeOnlyModer() const;
-    void                        setTopicChangeOnlyModer(bool);
+    void                                        setTopicChangeOnlyModer(bool);
 
-    std::size_t                 getCountUser() const;
-    std::string                 getPass() const;
-    std::string                 getBanMask() const;
-	std::vector<std::string> &getBanListVec();
-	std::vector<std::string> &getInviteListVec();
-	std::vector<std::pair<std::string, int > > &getUserInChannel();
-    bool                    getHasPass() const;
-    bool                    getOnlyInvaite() const;
-    std::string             getHostName() const;
-    std::string             getTopicChannel() const;
-    bool                    getModerChannel() const;
-    bool                    isPrivateChannel() const;
-    bool                    isSecretChannel() const;
+    bool                                        getHasPass() const;
+    bool                                        getOnlyInvaite() const;
+    bool                                        getModerChannel() const;
+    bool                                        isSecretChannel() const;
+    bool                                        isPrivateChannel() const;
+    bool                                        getTopicChangeOnlyModer() const;
+    std::string                                 getPass() const;
+    std::string                                 getBanMask() const;
+    std::string                                 getHostName() const;
+    std::string                                 getChannelName() const;
+    std::string                                 getTopicChannel() const;
+    std::size_t                                 getCountUserCanJoin() const;
+    std::size_t                                 getCountUser() const;
+	std::vector<std::string>                    &getBanListVec();
+	std::vector<std::string>                    &getInviteListVec();
+	std::vector<std::pair<std::string, int > >  &getUserInChannel();
 
     void                    eraseUserForInvaiteList(const std::string &);
     void                    eraseUserForChannel(const std::string &, int fd);
-
 
     void                    setOnlyInvaite(bool);
     void                    setHasPass(bool);

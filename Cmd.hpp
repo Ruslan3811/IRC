@@ -45,6 +45,7 @@ class  Command
             std::vector<Channel *> & channels, std::string servPass);
         virtual ~Command();
         void checkConnection(void);
+
         void cmdPass(void);
 	    void cmdUser(void);
 	    void cmdNick(void);
@@ -54,14 +55,15 @@ class  Command
         void cmdAway(void);
         void cmdInvite(void);
         void cmdTopic(void);
-        void printTopic(Channel *chan);
-        void printUsersInChannel(Channel *chan);
-        std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         void cmdJoin(void);
         void cmdKick();
         void cmdPart();
         void cmdNames();
         void cmdList();
+
+        void printTopic(Channel *chan);
+        void printUsersInChannel(Channel *chan);
+        std::pair<std::vector<std::string>, std::string > getResponseForComand() const;
         bool hasNickName(std::string param);
         bool onChannel(std::string channel);
         bool ClientOnChannel(std::string user, std::string channel);
@@ -69,12 +71,12 @@ class  Command
         std::string userAwayFlag(std::string user);
         std::vector<Channel *> &getAllChannels()const;
     private:
-        Channel * findChannel_(const std::string & channel);
-        User    * findUser_(const std::string & name);
-        void responseForCommand_(const std::string & msg, int numResponse, const std::string &arg1 = "") const;
-        void createChannel_();
-        void joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
-        void    addToChannel(std::string user, std::string channel);
-        void    userMode_(User *user, std::vector<std::string> & param);
+        Channel     *findChannel_(const std::string & channel);
+        User        *findUser_(const std::string & name);
+        void        responseForCommand_(const std::string & msg, int numResponse, const std::string &arg1 = "") const;
+        void        createChannel_();
+        void        joinToChannel_(const std::string & channelName, Channel * channel, std::vector<std::string> & passVec, size_t & iterPass);
+        void        addToChannel(std::string user, std::string channel);
+        void        userMode_(User *user, std::vector<std::string> & param);
 
 };

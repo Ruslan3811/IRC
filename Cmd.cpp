@@ -580,7 +580,9 @@ void Command::userMode_(User *user, std::vector<std::string> & param)
 			operation = false;
 			break;
 		default:
-			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
+			std::string msgR;
+			msgR.push_back(param[1][i]);
+			throw errorRequest(msgR, ERR_UMODEUNKNOWNFLAG);
 		}
 	}
 }
@@ -664,7 +666,9 @@ void Command::cmdMode()
 			send_("Set pass!\n", _user->getSocket());
 			break;
 		default:
-			throw errorRequest("" + param[1][i], ERR_UMODEUNKNOWNFLAG);
+			std::string msgR;
+			msgR.push_back(param[1][i]);
+			throw errorRequest(msgR, ERR_UMODEUNKNOWNFLAG);
 		}
 	}
 	

@@ -18,8 +18,8 @@ public:
     std::string                 &getTrailing();
     std::string                 &getPrefix();
     
-    void        setCmd(std::string cmd);
-    void        setParam(std::string param);
+    void                        setCmd(std::string cmd);
+    void                        setParam(std::string param);
 };
 
 // Alena
