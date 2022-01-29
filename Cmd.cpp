@@ -240,6 +240,14 @@ void Command::joinToChannel_(const std::string & channelName, Channel * channel,
 		throw errorRequest(channel->getChannelName(), ERR_CHANNELISFULL);
 	if (channel->getBanMask() != "" && _user->getNickName().find(channel->getBanMask()) != std::string::npos)
 		throw errorRequest(channel->getChannelName(), ERR_BADCHANMASK);
+	for (std::vector<std::pair<std::string, int> >::iterator it = channel->getUserInChannel().begin();
+	it != channel->getUserInChannel().end(); ++it)
+	{
+		if (it->first == _user->getNickName() && it->second == _user->getSocket())
+		{
+			throw errorRequest(channel->getChannelName(), ERR_NOSUCHCHANNEL);
+		}
+	}
 	if (channelName[0] == '&')
 	{
 		channel->pushUserInChannel(_user->getNickName(), _user->getSocket());
