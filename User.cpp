@@ -116,6 +116,11 @@ int User::readMsg() {
 		if (bytesRecv > 0) {
 			buf[bytesRecv] = 0;
 			msg += buf;
+			if (msg == "\n" || msg == "")
+			{
+				msg = "";
+				continue;
+			}
 			std::cout  << msg;
 			if (msg.find('\n') != std::string::npos) {
 				if (msg[0] != '\n')

@@ -115,6 +115,13 @@ void Server::receivingMessages() {
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
 					if (msg.size() != 0)
 					{
+						for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end();)
+						{
+							if ((*it)->getCountUser() == 0)
+								_channels.erase(it);
+							else
+								++it;
+						}
 						for (size_t i = 0; i < _channels.size(); ++i)
 						{
 							std::cout << _channels[i]->getChannelName() << std::endl;
