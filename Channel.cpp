@@ -4,13 +4,15 @@
 
 Channel::Channel(const std::string & channelName) 
 :  _channelName(channelName), _countUser(300), _onlyInvaite(false), _hasPass(false), _secretChannel(false), \
- _privateChannel(false), _moderChannel(false)
+ _privateChannel(false), _moderChannel(false), _topicChangeOnlyModer(false)
 {
     _topicChannel = "";
 }
 
 Channel::Channel(const std::string & channelName, const std::string & channelPass,const std::string & userName) 
-: _channelName(channelName), _pass(channelPass), _userHostNick(userName), _onlyInvaite(false), _hasPass(false), _secretChannel(false), _privateChannel(false), _moderChannel(false)  {}
+: _channelName(channelName), _pass(channelPass), _userHostNick(userName), _onlyInvaite(false), \
+_hasPass(false), _secretChannel(false), _privateChannel(false), _moderChannel(false), \
+_topicChangeOnlyModer(false)  {}
 
 Channel::~Channel() {}
 
@@ -22,6 +24,16 @@ bool                    Channel::getOnlyInvaite() const {return _onlyInvaite; };
 std::string Channel::getChannelName() const { return _channelName; }
 
 std::size_t     Channel::getCountUser() const { return _usersVec.size(); }
+
+bool                        Channel::getTopicChangeOnlyModer() const
+{
+    return _topicChangeOnlyModer;
+}
+void                        Channel::setTopicChangeOnlyModer(bool b)
+{
+    _topicChangeOnlyModer = b;
+}
+
 std::size_t     Channel::getCountUserCanJoin() const { return _countUser; }
 
 std::string     Channel::getPass() const { return _pass; }
