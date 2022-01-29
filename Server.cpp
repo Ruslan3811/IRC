@@ -107,9 +107,7 @@ void Server::receivingMessages() {
 				int idx = it - _fdUsers.begin();
 				// читаем сообщение
 				if (_UsersAccept[idx]->readMsg() == -1)
-				{
-					_UsersAccept[idx]->setFlag(-1);
-				}
+					_UsersAccept[idx]->setActiveUser(false);
 				try
 				{
 					std::vector<std::string> msg = _UsersAccept[idx]->getMessage();
@@ -127,9 +125,7 @@ void Server::receivingMessages() {
 							std::cout << _channels[i]->getChannelName() << std::endl;
 							printVectorPair(_channels[i]->getUserInChannel());
 							printVectorString(_channels[i]->getInviteListVec());
-							// if ()
 						}
-
 						Message message(*(--msg.end()));
 						Command A(message, _UsersAccept[idx], _UsersAccept, _channels, _password);
 					}
@@ -139,8 +135,6 @@ void Server::receivingMessages() {
 				{
 					send(_UsersAccept[idx]->getSocket(), ex.what(), std::string(ex.what()).size(), IRC_NOSIGNAL);
 				}
-			
-
 			}
 			it->revents = 0; // обнуляем revents, чтобы можно было пeреиспользовать структуру
 		}
@@ -164,7 +158,7 @@ void Server::deleteNotActiveUsers()
 				delete *beg;
 				_UsersAccept.erase(beg);
 				int i = beg - _UsersAccept.begin();
-        		_fdUsers.erase(_fdUsers.begin() + i);
+				_fdUsers.erase(_fdUsers.begin() + i);
 				break;
 			}
 			else
