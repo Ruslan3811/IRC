@@ -16,7 +16,7 @@ int main(int ac, char **av) {
 		{
 			serv.acceptUsers();
 			serv.receivingMessages();
-			// serv.deleteNotActiveUsers();
+			serv.deleteNotActiveUsers();
 		}
 	}
 }
