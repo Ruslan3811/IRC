@@ -1,28 +1,32 @@
-NAME = ircserv
+NAME= ircserv
 
-SOURCE = main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_function.cpp Exception.cpp Channel.cpp
+SOURCEFILES= main.cpp Server.cpp Cmd.cpp User.cpp Message.cpp dop_function.cpp Exception.cpp Channel.cpp
 
-OBJ_DIR = .obj
+SOURCEFOLDER= srcs/
 
-HDR = Server.hpp Errors.hpp User.hpp Message.hpp Exception.hpp Cmd.hpp
+OSOURCEFOLDER= .objects/
 
-FLAGS = -Wall -Wextra -Werror --std=c++98
+INCLUDEFOLDER= include/
 
-OBJ = $(addprefix $(OBJ_DIR)/, $(SOURCE:.cpp=.o))
+SOURCE= $(addprefix $(SOURCEFOLDER), $(SOURCEFILES))
+
+OSOURCE= $(addprefix $(OSOURCEFOLDER), $(SOURCEFILES:.cpp=.o))
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@g++ $(OBJ) -o $(NAME)
-
-$(OBJ_DIR)/%.o: %.cpp
-	@mkdir -p $(OBJ_DIR)
-	@g++ -c $(FLAGS) $< -o $@
+$(OSOURCEFOLDER)%.o: $(SOURCEFOLDER)%.cpp
+	mkdir -p $(OSOURCEFOLDER)
+	clang++ -Wall -Werror -Wextra -c $< -o $@ -std=c++98 -I $(INCLUDEFOLDER)
+	
+$(NAME): $(OSOURCE)
+	clang++ $(OSOURCE) -o $(NAME)
 
 clean:
-	@rm -rf $(OBJ_DIR)
+	rm -rf $(OSOURCEFOLDER)
 
 fclean: clean
-	@rm -rf $(NAME)
+	rm -rf $(NAME)
 
 re: fclean all
+
+.PHONY: clean fclean re all dir
