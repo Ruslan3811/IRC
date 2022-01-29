@@ -710,7 +710,7 @@ void Command::cmdTopic() {
 		throw errorRequest(_msg.getParams()[0], ERR_NOTONCHANNEL);
 	else {
 		Channel *chan = findChannel_(_msg.getParams()[0]);
-		if (isOperator(_msg.getParams()[0]) == false)
+		if (chan->getTopicChangeOnlyModer() && isOperator(_msg.getParams()[0]) == false && (_msg.getParams().size() != 1 || _msg.getTrailing().size() != 0))
 			throw errorRequest(_msg.getCmd(), ERR_CHANOPRIVSNEEDED);
 		if (_msg.getParams().size() == 2)
 			chan->setTopicChannel(_msg.getParams()[1]);
