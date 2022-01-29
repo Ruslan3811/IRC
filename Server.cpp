@@ -147,17 +147,28 @@ void Server::receivingMessages() {
 	}
 }
 
-void Server::deleteNotActiveUsers() {
-	std::vector<User *>::iterator beg = _UsersAccept.begin();
+void Server::deleteNotActiveUsers()
+{
+		std::vector<User *>::iterator beg = _UsersAccept.begin();
 		std::vector<User *>::iterator end = _UsersAccept.end();
-		while (beg != end) {
-			if ((*beg)->getActive() == false) {
+		while (beg != end)
+		{
+			if ((*beg)->getActive() == false)\
+			{
+				for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+				{
+					(*it)->eraseUserForChannel((*beg)->getNickName(), (*beg)->getSocket());
+					(*it)->eraseUserForInvaiteList((*beg)->getNickName());
+				}
 				close((*beg)->getSocket());
 				delete *beg;
 				_UsersAccept.erase(beg);
+				int i = beg - _UsersAccept.begin();
+        		_fdUsers.erase(_fdUsers.begin() + i);
 				break;
 			}
-			++beg;
+			else
+				++beg;
 		}
 }
 
