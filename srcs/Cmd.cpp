@@ -169,12 +169,11 @@ void Command::PrivMsg()
 		}
 		else if (userExist == false)
 		{
-			if (_msg.getParams().size() < 2)
-				throw errorRequest(_msg.getCmd(), _user->getNickName(), ERR_NEEDMOREPARAMS);
-			messegeFromUser = _msg.getParams()[1] + "\n";
-			break;
+			throw errorRequest(userChannel[i], _user->getNickName(), ERR_NOSUCHNICK);
 		}
 	}
+	if ( _msg.getParams().size() > 1)
+	messegeFromUser = _msg.getParams()[1] + "\n";
 	for (size_t i = 0; i < userAndChanel.size(); ++i)
 	{
 		if (userAndChanel[i].second == true)
