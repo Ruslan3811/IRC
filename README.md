@@ -4,10 +4,12 @@ IRC (Internet Relay Chat) – устаревший протокол прикла
 Проект представляет собой IRC-сервер, написанный на основе стандарта [rfc1459](https://datatracker.ietf.org/doc/html/rfc1459).
 
 <h2>Установка</h2>
-git clone\n
-cd IRC/\n
-make\n
-Запуск сервера:\n
-./ircserv 6667 secretpassword\n
-Запуск клиента:\n
-"nc localhost 6667"\n
+```  
+git clone  
+cd IRC-Server/  
+make  
+```  
+<h3>Запуск сервера:</h3>
+./ircserv 6667 secretpassword
+<h3>Запуск клиента:</h3>
+"nc localhost 6667"
